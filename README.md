@@ -1,5 +1,5 @@
 # data_pipeline 
-Updated 16 May 2024; Krista Longnecker
+Updated 3 July 2024; Krista Longnecker
 
 The repository was started during a small group meeting for the BIOS-SCOPE project. BIOS-SCOPE conducts multiple cruises and relies on samples and data collected during BATS cruises. The data streams include CTD data and discrete samples. The CTD data are used to calculate derived variables. The data from the discrete samples is pulled together with the CTD data to create a 'master_bottle_file' for everyone to use. This GtiHub repository discusses the CTD data and discrete data files. If you are interested in the data-portal being developed to link in the sequence data, that is available [here](https://github.com/BIOS-SCOPE/data-portal).
 
@@ -88,7 +88,9 @@ Krista has Craig's code and will work on this next (1/24/2024)
 
 ## Calculating derived variables from BATS data
 update 9 February 2024\
-There is a general interest in BIOS-SCOPE to calculate Ruth's parameters for all BATS data, back to BATS cruise #001. There is now a MATLAB script to do this [calcDerivedVariables_BATSallTime.m ](https://github.com/BIOS-SCOPE/data_pipeline/blob/main/MATLAB_code/calcDerivedVariables_BATSallTime.m ). The output is one file with everyone and a series of CSV files, one per cruise. The full file is quite large, so it is now sitting in the BIOS-SCOPE Google Drive.
+There is a general interest in BIOS-SCOPE to calculate Ruth's parameters for all BATS data, back to BATS cruise #001. There is now a MATLAB script to do this [calcDerivedVariables_BATSallTime.m ](https://github.com/BIOS-SCOPE/data_pipeline/blob/main/MATLAB_code/calcDerivedVariables_BATSallTime.m ). The output is one file with everyone and a series of CSV files, one per cruise. The full file is quite large, so it is now sitting in the BIOS-SCOPE Google Drive.\
+updated 3 July 2024\
+Krista made a new repository that will be BATSallTime because it's too confusing to do the changes needed to make the historical BATS calculations in the same place as the code needed to merge R/MATLAB for future BATS cruises.
 
 ## tasks to-do list
 Ruth
