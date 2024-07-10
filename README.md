@@ -1,5 +1,5 @@
 # data_pipeline 
-Updated 3 July 2024; Krista Longnecker
+Updated 10 July 2024; Krista Longnecker
 
 The repository was started during a small group meeting for the BIOS-SCOPE project. BIOS-SCOPE conducts multiple cruises and relies on samples and data collected during BATS cruises. The data streams include CTD data and discrete samples. The CTD data are used to calculate derived variables. The data from the discrete samples is pulled together with the CTD data to create a 'master_bottle_file' for everyone to use. This GtiHub repository discusses the CTD data and discrete data files. If you are interested in the data-portal being developed to link in the sequence data, that is available [here](https://github.com/BIOS-SCOPE/data-portal).
 
@@ -44,9 +44,9 @@ Now you have to do some manual copy/paste:
 ## Step 3: Ruth Curry's pipeline (in MATLAB)
 Once Shuting's code has been used to add the necessary samples to the master bottle file, then you can run Ruth's code to calculate the derived variables. 
 
-Krista has updated [create_biosscope_files_2022_2023_Krista.m ](https://github.com/BIOS-SCOPE/data_pipeline/blob/main/MATLAB_code/create_biosscope_files_2022_2023_Krista.m ) to pick up where the previous processing script ended. This file will start with 10390 (March 2022) and then go to 10404 (May 2023). The path information is set for Krista's desktop, this would need to be updated for other computers.
+Krista has updated [create_biosscope_files_2024_Krista.m ](https://github.com/BIOS-SCOPE/data_pipeline/blob/main/MATLAB_code/create_biosscope_files_2024_Krista.m ) to pick up where the previous processing script ended. This file will start with 10390 (March 2022) and then go to 10404 (May 2023). The path information is set for Krista's desktop, this would need to be updated for other computers.
 
-One special note about season transition dates. This information could be from (a) glider data, or (b) from Hydrostation S data, or (c) pre-set dates. Ruth will make a readme file to detail what year relies on which option. The output from Ruth's script will make this file: ```Season_dates_all.mat```
+One special note about season transition dates. There is now an Excel file ```BATS_seasons_wKLedits.2024.07.05.xlsx``` and the MATLAB code is now set to read in that file and convert it to the format used by Ruth. 
 
 Generally the rest of the code does the following:
 *	Loads CTD files from BATS, labels them with physical framework parameters
@@ -55,7 +55,7 @@ Generally the rest of the code does the following:
 *	Loops through bottle data cruise by cruise, matches the corresponding CTD cast, computes a set derived physical properties and adds the values to the bottle cast
 *	The end result is a file that is called ```ADD_to_MASTER_temporary.csv``` which is saved to a holding zone
  
-The next step is to use ```Join_discreteData_v2.R``` to add the calculated variables to the existing bottle file.
+The next step is to use ```Join_discreteData_v3.R``` to add the calculated variables to the existing bottle file.
 
 Once a set of CTD data has been processed, you don't need to redo the MATLAB steps unless the data gets reprocessed by BATS.
 
@@ -81,23 +81,20 @@ At this point, you do have to do some manual copy/pasting:
 Finally, upload this new discrete file back to the BIOS-SCOPE Google Drive, put it in ```./1.0 DATA/1.0 CURRENT BOTTLE FILE```. Move the old bottle file into the 'Old Versions' folder.
 
 
-## Craig's path to make 'one cast' for cruise
+## Craig's need for a synoptic profile for each BATS cruise
 Craig currently working in R to make one single cast for each cruise so we can pull in data from pumps etc.
 For the data portal, using these synpotic casts, the idea is to use cast and nominal depth as the key for merging.
-Krista has Craig's code and will work on this next (1/24/2024)
+Krista has Craig's code and is working on this in a separate GitHub repository (7/11/2024)
 
 ## Calculating derived variables from BATS data
-update 9 February 2024\
-There is a general interest in BIOS-SCOPE to calculate Ruth's parameters for all BATS data, back to BATS cruise #001. There is now a MATLAB script to do this [calcDerivedVariables_BATSallTime.m ](https://github.com/BIOS-SCOPE/data_pipeline/blob/main/MATLAB_code/calcDerivedVariables_BATSallTime.m ). The output is one file with everyone and a series of CSV files, one per cruise. The full file is quite large, so it is now sitting in the BIOS-SCOPE Google Drive.\
-updated 3 July 2024\
-Krista made a new repository that will be BATSallTime because it's too confusing to do the changes needed to make the historical BATS calculations in the same place as the code needed to merge R/MATLAB for future BATS cruises.
+#### updated July 2024
+Krista made a new repository to do the calculations on the historical BATS data (BATSallTime) because it's too confusing to do the changes needed to make the historical BATS calculations in the same place as the code needed to merge R/MATLAB for future BATS cruises.
 
 ## tasks to-do list
 Ruth
 - [ ] put glider data and metadata into BCO-DMO format
 
 Krista 
-- [ ] Work on Craig's code (need to figure out how to handle CTD data)
 - [ ] Need way to track what has and has not been done for a given cruise
 - [ ] Put output from Ruth's code onto Google Drive (all the CSV/MAT/TXT files)
 
