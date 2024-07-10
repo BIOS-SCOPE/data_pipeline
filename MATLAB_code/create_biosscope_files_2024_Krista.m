@@ -1,32 +1,48 @@
 % Compile BATS/BIOSSCOPE CTD files in .csv and .mat formats
 % Add fields to Master Bottle file 
 % Original code from Ruth Curry, BIOS / ASU
-% Krista Longnecker; 2 January 2024; updated 26 February 2024
+% Krista Longnecker; updated 10 July 2024
 %
-% Some notes from Krista (26 February 2024)
+% Some notes from Krista (10 July 2024)
 % (1) you will need to update the path information and file names
-% up through row ~74 in this code. There should be no need to change
+% up through row ~82 in this code. There should be no need to change
 % anything past that point.
 % (2) The output from this code will be a CSV file that will be saved in
-% the place defined at line 22
+% the place defined at line 29
+%
+% About the seasons - in June 2024 we received updated season information
+% from Ruth, this update takes advantage of the updated season information
+% from Ruth and will do so in a way that makes it easy to keep making
+% seasonal updates moving forward
 
 %% >>>>>   % add ./BIOSSCOPE/CTD_BOTTLE/mfiles into matlab path
-addpath(genpath('C:\Users\klongnecker\Documents\Dropbox\GitHub\data_pipeline\MATLAB_code\mfiles'));
+addpath(genpath('C:\Users\klongnecker\Documents\GitHub\BATSallTime\MATLAB_code\mfiles')); %This is KL's laptop
 
 %% update the folder information before getting started
 %all path information will begin with the rootdir
 rootdir = 'C:\Users\klongnecker\Documents\Dropbox\Current projects\Kuj_BIOSSCOPE\RawData\';
+
 %use the workdir to temporarily hold your CTD data
 workdir = fullfile(rootdir,'CTDdata\BSworkingCurrent\');
+
 %use the CSVoutdir as a place to export your CSV file at the end
 CSVoutdir = 'C:\Users\klongnecker\Documents\Dropbox\GitHub\data_pipeline\data_holdingZone\';
+
 %Bfile is the name of the bottle file you downloaded from the Google Drive
 Bfile = fullfile(rootdir,'DataFiles_CTDandDiscreteSamples/BATS_BS_COMBINED_MASTER_latest.xlsx');
 
 %what are you going to use for the season information?
 if 1
+    %Use the dates defined in the easy-to-read Excel file and convert to
+    %the format Ruth uses in her code; update 10 July 2024
+    %Use this function to make a MATLAB structure with transition dates
+    seasonsFile = fullfile('BATS_seasons_wKLedits.2024.07.05.xlsx');
+    %use this function to reformat the dates, set fName in calcDerivedVariables
+    season_dates = reformat_season_dates(seasonsFile) ; 
+elseif 0
     %load in an existing file
-    load('C:\Users\klongnecker\Documents\Dropbox\GitHub\data_pipeline\MATLAB_code\Season_dates_all.mat');
+    %Comment this out...want to be sure that people really want to use old data
+    %load('C:\Users\klongnecker\Documents\Dropbox\GitHub\data_pipeline\MATLAB_code\Season_dates_NOTcurrent.mat');
 else
     % define season transition dates from glider DAvg plots and save....
     % If glider not available can use general dates:  15-Dec: 01-Apr : 20-Apr : 01-Nov
@@ -64,10 +80,6 @@ else
                               datenum('20-Oct-2021'), datenum('26-Nov-2021');...
                               datenum('01-Nov-2022'), datenum('15-Dec-2022');...
                               datenum('01-Nov-2023'), datenum('15-Dec-2023')];
-    if 0
-        %set to one if you need to save an updated version of the season information
-        save('Season_dates_all.mat','season_dates'); 
-    end
 end
 
 
