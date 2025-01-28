@@ -5,6 +5,7 @@
 # Krista Longnecker, tidying up 21 January 2024
 # Krista Longnecker, 26 January 2024 change sheet name to 'DATA' (was 'BATS_BS bottle file')
 # Krista, 17 May 2024, adding points to help set the path
+# Krista, 27 January 2025 correcting typo in section setting the nominal depths
 # 
 # Some notes from Krista: 
 # (1) you will need to update the path information and file names up through row ~40 in this code. 
@@ -287,7 +288,7 @@ for (a in 1:length(D)) {
       new$Nominal_Depth[j]=130
     } else if (new$Depth[j]<143 & new$Depth[j]>138){
       new$Nominal_Depth[j]=140
-    } else if (new$Depth[j]<163 & new$Depth[j]>518){
+    } else if (new$Depth[j]<163 & new$Depth[j]>158){ #correcting 1/27/2025 was '518', not '158'
       new$Nominal_Depth[j]=160
     } else if (new$Depth[j]<203 & new$Depth[j]>198){
       new$Nominal_Depth[j]=200
