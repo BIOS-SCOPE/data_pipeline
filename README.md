@@ -79,7 +79,7 @@ At this point, you do have to do some manual copy/pasting:
 * Update the log and save the discrete file with a new date.
 
 Finally, upload this new discrete file back to the BIOS-SCOPE (working) Google Drive. To do this and still retain the links do the following:
-* Put a copy of the latest file into the 'old versions' folder with a date
+* Put a copy of the latest file into the 'old versions' folder with a date (I would put the old file on the BIOS-SCOPE Team drive, but that's just my two cents)
 * Right click on the latest file in the BIOS-SCOPE Working Google Drive
 * Scroll down to File Information, and then Manage Versions
 * Select 'upload new version' from the menu box that will come up.
