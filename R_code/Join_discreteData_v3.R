@@ -25,7 +25,7 @@ if (OS == "unix"){
   dPath <- "/users/klongnecker/" 
 } else if (OS == "windows"){
   # windows file path - change to what works on your computer
-  dPath <- "C:/Users/klongnecker/Documents/Dropbox/Current projects/Kuj_BIOSSCOPE/RawData/DataFiles_CTDandDiscreteSamples/" 
+  dPath <- "C:/Users/klongnecker/Documents/Dropbox/Current projects/Longnecker_BIOSSCOPE/" 
 } else {
   #something went wrong...could not determine the operating system
   print("ERROR: OS could not be identified")
@@ -36,9 +36,10 @@ if (OS == "unix"){
 fName <- "BATS_BS_COMBINED_MASTER_latest.xlsx"
 
 #need the file information for the new data file. Note, you must have a variable "New_ID"
-nPath <- "C:/Users/klongnecker/Documents/GitHub/data_pipeline/data_holdingZone/"
+nPath <- "C:/Users/klongnecker/Documents/Dropbox/GitHub/data_pipeline/data_holdingZone/"
 nDatafile <- "sampleDataFile_useAsExampleForYourData.xlsx"
-nSheetName <- "data"
+
+nSheetName <- "data" 
 
 fileType <- 'xlsx' #one of two choices: 'csv' or 'xlsx'
 
@@ -48,8 +49,8 @@ fileType <- 'xlsx' #one of two choices: 'csv' or 'xlsx'
 
 # #will accumulate lots of these, so comment them out and add to the list as needed
 # #Shimadzu data from Ellie 1/24/2024
-existingColumns <- c("DOC (umol/kg)","DOC_QF")
-tempColumns <- c("DOC [UMOL/KG]","DOC_FLAG_W")
+# existingColumns <- c("DOC (umol/kg)","DOC_QF")
+# tempColumns <- c("DOC [UMOL/KG]","DOC_FLAG_W")
 
 # #Lomas FCM data
 # existingColumns <- c("Pro(cells/ml)","Syn(cells/ml)","Piceu(cells/ml)","Naneu(cells/ml)")
@@ -58,6 +59,10 @@ tempColumns <- c("DOC [UMOL/KG]","DOC_FLAG_W")
 # #Ruth's calculated values (will be a direct match, so easy)
 # existingColumns <- c("Sunrise","Sunset","MLD_dens125","MLD_bvfrq","MLD_densT2","DCM","VertZone","Season" )
 # tempColumns <- existingColumns
+
+# POM data Ellie 5/3/2024
+existingColumns <- c("POC (ug/kg)","POC_QF","PON (ug/kg)","PON_QF")
+tempColumns <- c("POC (ug/kg)","POC_QF","PON (ug/kg)","PON_QF")
 
 
 ########## should not need to update anything below this point
