@@ -1,5 +1,5 @@
 # data_pipeline 
-Updated 16 May 2024; Krista Longnecker 
+Updated 28 January 2025; Krista Longnecker 
 
 The repository was started during a small group meeting for the BIOS-SCOPE project. BIOS-SCOPE conducts multiple cruises and relies on samples and data collected during BATS cruises. The data streams include CTD data and discrete samples. The CTD data are used to calculate derived variables. The data from the discrete samples is pulled together with the CTD data to create a 'master_bottle_file' for everyone to use. This GtiHub repository discusses the CTD data and discrete data files. If you are interested in the data-portal being developed to link in the sequence data, that is available [here](https://github.com/BIOS-SCOPE/data-portal).
 
@@ -78,8 +78,11 @@ At this point, you do have to do some manual copy/pasting:
 * Get the headers with the proper colors - this is the first row in the 'Bottle File Header' worksheet.
 * Update the log and save the discrete file with a new date.
 
-Finally, upload this new discrete file back to the BIOS-SCOPE Google Drive, put it in ```./1.0 DATA/1.0 CURRENT BOTTLE FILE```. Move the old bottle file into the 'Old Versions' folder.
-
+Finally, upload this new discrete file back to the BIOS-SCOPE (working) Google Drive. To do this and still retain the links do the following:
+* Put a copy of the latest file into the 'old versions' folder with a date (I would put the old file on the BIOS-SCOPE Team drive, but that's just my two cents)
+* Right click on the latest file in the BIOS-SCOPE Working Google Drive
+* Scroll down to File Information, and then Manage Versions
+* Select 'upload new version' from the menu box that will come up.
 
 ## Craig's need for a synoptic profile for each BATS cruise
 Craig currently working in R to make one single cast for each cruise so we can pull in data from pumps etc.
