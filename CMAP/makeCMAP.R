@@ -1,10 +1,10 @@
 #write up a script to convert the BIOS-SCOPE data to the required format for CMAP
 # Krista Longnecker, 23 June 2025
 
-library(dplyr)
+suppressPackageStartupMessages(library(dplyr))
 #there are multiple options for reading/writing Excel files, use this version first
-library(readxl) #use this to read in the master file
-library(lubridate)
+suppressPackageStartupMessages(library(readxl)) #use this to read in the master file
+suppressPackageStartupMessages(library(lubridate))
 
 #set up the right path for the discrete data file, this varies by operating system and computer
 OS <- .Platform$OS.type
@@ -26,7 +26,9 @@ fName_CMAP <- "BIOSSCOPE_data_latest.xlsx"
 fName <- "BATS_BS_COMBINED_MASTER_latest.xlsx"
 
 #read in the data from the existing bottle file 
-discrete <- suppressWarnings(read_excel(paste0(dPath,fName),sheet = 'DATA'))
+discrete <- suppressWarnings(read_excel(paste0(dPath,fName),sheet = 'DATA',na=c('-999',-999.00)))
+
+#convention at CMAP is to leave missing data as emtpy, so we have to remove the -999 values
 
 #will also need the variable information from the discrete file as well
 #We will need to add some information to the discrete file in order to meet CMAP's guidelines
@@ -80,27 +82,33 @@ df2$var_short_name <- wbVar$Header
 df2$var_long_name <- wbVar$Description
 df2$var_sensor <- 'need this'
 df2$var_unit <- wbVar$Unit
+df2$var_spatial_res <- 'irregular'
+df2$var_temporal_res <- 'irregular'
 
 
 #finally gather up the dataset_meta_data
 #finally gather up the dataset_meta_data
 #assemble the details here, might setup in a separate text file later
-df3 <- data.frame(dataset_short_name = 'tblBIOSSCOPE_v1')
+df3 <- data.frame(dataset_short_name = 'BIOSSCOPE_v1')
 df3$dataset_long_name	<- 'BIOS-SCOPE discrete sample data'
-df3$dataset_version	<- 'v1'
+df3$dataset_version	<- '1.0'
 df3$dataset_release_date	<- '2025-06-25'
 df3$dataset_make	<- 'observation'
-df3$dataset_source	<- 'BIOS' #? UCSB? multiple?
-df3$dataset_distributor	<- 'BIOS-SCOPE project team'
+df3$dataset_source	<- 'Craig Carlson, Bermuda Institute of Ocean Sciences'
+df3$dataset_distributor	<- 'Craig Carlson, Bermuda Institute of Ocean Sciences'
 df3$dataset_acknowledgement	<- 'We thank the BIOS-SCOPE project team and the BATS team for assistance with sample collection, processing, and analysis. The efforts of the captains, crew, and marine technicians of the R/V Atlantic Explorer are a key aspect of the success of this project This work supported by funding from the Simons Foundation International'
-df3$dataset_history	<- 'not applicable'
-df3$dataset_description	<- 'Data from discrete samples collected during the BIOS-SCOPE project from 2016 until 2025'
+df3$dataset_history	<- ''
+df3$dataset_description	<- 'Data from discrete samples collected during the BIOS-SCOPE project from 2016 until 2025.'
 df3$dataset_references	<- 'Data from 2016 until 2019 are also available at BCO-DMO as DOI:10.26008/1912/bco-dmo.861266.1 '
 df3$climatology	<- 0
 
-#get the list of cruise names from here:
-t <- as.list(unique(discrete$Cruise_ID))
-df3$cruise_names <- toString(t)
+#get the list of cruise names from here 
+#t <- as.list(unique(discrete$Cruise_ID))
+#df3$cruise_names <- toString(t)
+#change, this needs to be one per row, which extends the dataframe:
+t <- as.data.frame(unique(discrete$Cruise_ID))
+df3[2:dim(t)[1],] <- NA
+df3$cruise_names <- t
 rm(t)
 
 # #before moving on, tidy up and remove this package
@@ -109,5 +117,5 @@ detach("package:readxl",unload=TRUE)
 #this next library is better at writing files, particularly those files that have multiple worksheets
 library(openxlsx)
 dataset_names <- list('data' = df, 'dataset_meta_data' = df3, 'vars_meta_data' = df2)
-write.xlsx(dataset_names, file = fName_CMAP)
+#write.xlsx(dataset_names, file = fName_CMAP)
 
