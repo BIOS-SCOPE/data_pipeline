@@ -117,5 +117,5 @@ detach("package:readxl",unload=TRUE)
 #this next library is better at writing files, particularly those files that have multiple worksheets
 library(openxlsx)
 dataset_names <- list('data' = df, 'dataset_meta_data' = df3, 'vars_meta_data' = df2)
-#write.xlsx(dataset_names, file = fName_CMAP)
+write.xlsx(dataset_names, file = fName_CMAP)
 
