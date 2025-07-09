@@ -1,6 +1,6 @@
 # data_pipeline
 Setup script to convert the BIOS-SCOPE data into the format expected by CMAP.\
-Krista Longnecker, 27 June 2025
+Krista Longnecker, 9 July 2025
 
 ## Updates as I go along, most recent at the top
 ### 9 July 2025 
