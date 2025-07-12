@@ -1,11 +1,14 @@
 # data_pipeline
 Setup script to convert the BIOS-SCOPE data into the format expected by CMAP.\
-Krista Longnecker, 9 July 2025
+Krista Longnecker, 12 July 2025
 
 ## Updates as I go along, most recent at the top
+### 12 July 2025
+For MetaboLights data: update to use libchebipy to search for all possible names, given a CHEBI number. The CHEBI numbers come from the MetaboLights submission.
+- [x] MetaboLights: how to handle metadata about variables for compounds with multiple names? That seems best automated.
+
 ### 9 July 2025 
 Finished up code to generate one CMAP file from one MetaboLights study, with two ion modes of data
-- [ ] MetaboLights: how to handle metadata about variables for compounds with multiple names? That seems best automated.
 - [x] MetaboLights: need to work on format of metadata
 
 ### 27/28 June 2025
