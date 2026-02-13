@@ -5,8 +5,8 @@ The repository was started during a small group meeting for the BIOS-SCOPE proje
 
 The remainder of this repository describes how this is done, provides details and code from different people, and ends with a to-do list for each member of this small group.
 
-Details on the scripts are covered either in the PDF presented [here](https://github.com/BIOS-SCOPE/data_pipeline/blob/main/BIOSSCOPE_dataPipeline_LongneckerEtAl.pdf) or in this figure:
-<img src="https://github.com/BIOS-SCOPE/data_pipeline/blob/main/data_pipeline_figure.2024.07.10.jpg"  width="105%" height="105%">
+Details on the scripts are covered either in the PDF presented [here](https://github.com/BIOS-SCOPE/data_pipeline/blob/main/BIOSSCOPE_dataPipeline_update_2026.pdf) or in this figure:
+<img src="https://github.com/BIOS-SCOPE/data_pipeline/blob/main/data_pipeline_figure.2026.02.13.jpg"  width="105%" height="105%">
 
 ## After a cruise 
 * The CTD data goes to Craig Carlson to serve as an archive; no work is done on these files.
@@ -44,9 +44,9 @@ Now you have to do some manual copy/paste:
 ## Step 3: Ruth Curry's pipeline (in MATLAB)
 Once Shuting's code has been used to add the necessary samples to the master bottle file, then you can run Ruth's code to calculate the derived variables. 
 
-Krista has updated [create_biosscope_files_2024_Krista.m ](https://github.com/BIOS-SCOPE/data_pipeline/blob/main/MATLAB_code/create_biosscope_files_2024_Krista.m ) to pick up where the previous processing script ended. This file will start with 10390 (March 2022) and then go to 10404 (May 2023). The path information is set for Krista's desktop, this would need to be updated for other computers.
+Krista has updated [create_biosscope_files_2026_Krista.m ](https://github.com/BIOS-SCOPE/data_pipeline/blob/main/MATLAB_code/create_biosscope_files_2026.m ) to pick up where the previous processing script ended. This file will start with 10390 (March 2022) and then go to June 2025. The path information is set for Krista's desktop, this would need to be updated for other computers.
 
-One special note about season transition dates. There is now an Excel file ```BATS_seasons_wKLedits.2024.07.05.xlsx``` and the MATLAB code is now set to read in that file and convert it to the format used by Ruth. 
+One special note about season transition dates. There is now an Excel file ```BATS_seasons_wKLedits.2026.02.13.xlsx``` and the MATLAB code is now set to read in that file and convert it to the format used by Ruth. 
 
 Generally the rest of the code does the following:
 *	Loads CTD files from BATS, labels them with physical framework parameters
@@ -80,7 +80,7 @@ At this point, you do have to do some manual copy/pasting:
 
 :star: :star: **New --> February 2025**\
 Upload this new discrete file back to the BIOS-SCOPE (working) Google Drive. To do this and still retain the links do the following:
-* Put a copy of the latest file into the 'old versions' folder with a date (I would put the old file on the BIOS-SCOPE Team drive, but that's just my two cents)
+* Put a copy of the latest file into the 'old versions' folder with a date 
 * Right click on the latest file in the BIOS-SCOPE Working Google Drive
 * Scroll down to File Information, and then Manage Versions
 * Select 'upload new version' from the menu box that will come up.
@@ -91,6 +91,9 @@ For the data portal, using these synpotic casts, the idea is to use cast and nom
 Krista has Craig's code and is working on this in a separate GitHub repository (7/11/2024)
 
 ## Calculating derived variables from BATS data
+#### updated February 2026
+Krista used BATSallTime repository to calculate the seasons from the BATS CTD data. The gliders were in the water less, so this was the best way to get seasonal information.
+
 #### updated July 2024
 Krista made a new repository to do the calculations on the historical BATS data (BATSallTime) because it's too confusing to do the changes needed to make the historical BATS calculations in the same place as the code needed to merge R/MATLAB for future BATS cruises.
 
@@ -100,7 +103,6 @@ Ruth
 
 Krista 
 - [ ] Need way to track what has and has not been done for a given cruise
-- [ ] Put output from Ruth's code onto Google Drive (all the CSV/MAT/TXT files)
 
 Rachel
 - [ ]  Discuss pipeline with Rod and finalize the CTD processing.
