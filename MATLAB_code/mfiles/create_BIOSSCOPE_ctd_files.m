@@ -184,8 +184,11 @@ for ii = 1:ncast
    if nz > MAXZ
        %KL updated error 1/21/2024 - this issue also occurs if you are
        %running the script on data that has already been processed
-       error('foo:bar',['Note from Krista: You may have tried to run this script on data that has already been processed, \n', ...
-           'or data arrays not long enough. In the later case, increase MAXZ to at least ',num2str(nz)])
+       %KL 2/12/2026: set scripts to clear the outdir before starting, so 
+       % that gets rid of one cause for this error. However, do not delete
+       % the check as will need to know if I cannot make a square matrixc
+       %keyboard
+       error('foo:bar',['Data arrays not long enough. In the later case, increase MAXZ to at least ',num2str(nz)])
    end
    Xout.mtime(ii) = decyear2dnum(CTD.decy(itop));
       dvec = datevec(Xout.mtime(ii));

@@ -19,7 +19,7 @@ rm(list =ls.str())
 library(dplyr)
 library(readxl)
 
-##first, set the path. 
+##first, set the path. This folder is NOT synced to GitHub.
 # if you are on a Mac, your path will be something like this --> /users/klongnecker
 # if you are on a PC, your path will be something like this --> c:/users/klongnecker
 OS <- .Platform$OS.type
@@ -29,7 +29,8 @@ if (OS == "unix"){
   dPath <- "/users/klongnecker/" 
 } else if (OS == "windows"){
   # windows file path
-  dPath <- "C:/Users/klongnecker/Documents/Dropbox/Current projects/Kuj_BIOSSCOPE/RawData/DataFiles_CTDandDiscreteSamples/" 
+  #dPath <- "C:/Users/klongnecker/Documents/Dropbox/Current projects/Kuj_BIOSSCOPE/RawData/DataFiles_CTDandDiscreteSamples/" 
+  dPath <- "D:/Dropbox/GitHub_niskin/data_pipeline/RawData/"
 } else {
   #something went wrong...could not determine the operating system
   print("ERROR: OS could not be identified")
@@ -42,13 +43,13 @@ sheetName <- 'DATA' #updating, Krista keeps typing this wrong! was: BATS_BS bott
 
 ##get the header information for the CTD data; KL used CTD ID.docx in 91614 folder in
 #"ORIG CTD FROM BATS", to make a text file that now sits at GitHub
-gDir <- "C:/Users/klongnecker/Documents/Dropbox/GitHub/data_pipeline/"
+gDir <- "D:/Dropbox/GitHub_niskin/data_pipeline/"
 headers <- read.csv(paste0(gDir,"CTD_headerInformation.csv"),sep=",", fileEncoding="UTF-8-BOM", header=F)
 
-cruiseType <- 'BATS' #or BIOSSCOPE #change as needed
+cruiseType <- 'BIOSSCOPE' #either BIOSSCOPE or BATS #change as needed
 
-# where is the working directory with the new CTD data (will have been downloaded from Google Drive)
-newDir <- "C:/Users/klongnecker/Documents/Dropbox/Current projects/Kuj_BIOSSCOPE/RawData/CTDdata/BSworkingCurrent"
+# where is the working directory with the new CTD data (this folder is NOT synced to GitHub)
+newDir <- "D:/Dropbox/GitHub_niskin/data_pipeline/RawData/CTDrelease_20250829-92511"
 
 
 
