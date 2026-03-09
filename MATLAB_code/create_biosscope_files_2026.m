@@ -26,7 +26,7 @@ rootdir = 'D:\Dropbox\GitHub_niskin\data_pipeline\';
 %use the datadir to temporarily hold your CTD data (make sure this is
 %outside where GitHub syncs as it could be a large folder)
 datadir = fullfile(rootdir,'RawData'); %put discrete file here
-CTDdatadir = fullfile(rootdir,'RawData\CTDrelease_20250829-92511'); %put CTD data here...KEEP name so we know which CTD release we are adding
+CTDdatadir = fullfile(rootdir,'RawData\CTDrelease_temp'); %put CTD data here...KEEP name so we know which CTD release we are adding
 
 %Bfile is the name of the bottle file you downloaded from the Google Drive
 Bfile = fullfile(datadir,'BATS_BS_COMBINED_MASTER_latest.xlsx');
