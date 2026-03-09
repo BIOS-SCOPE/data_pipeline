@@ -83,7 +83,8 @@ dirlist = dir('*_ctd.txt');
 %new_cruises = cat(1,dirlist.name); %KL adding 1/4/2024
 %cd(datadir);
 
-MAXZ = 2500;  % row dimension for CTD profiles...does BIOS-SCOPE ever go deeper? YES
+% MAXZ = 2500;  % row dimension for CTD profiles...does BIOS-SCOPE ever go deeper? YES
+MAXZ = 4005; %BIOS-SCOPE has some deep casts that we need to consider
 
 nfiles = length(dirlist);
 
