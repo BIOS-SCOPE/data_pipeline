@@ -101,14 +101,5 @@ Krista used BATSallTime repository to calculate the seasons from the BATS CTD da
 Krista made a new repository to do the calculations on the historical BATS data (BATSallTime) because it's too confusing to do the changes needed to make the historical BATS calculations in the same place as the code needed to merge R/MATLAB for future BATS cruises.
 
 ## tasks to-do list
-Ruth
-- [ ] put glider data and metadata into BCO-DMO format
-
 Krista 
 - [ ] Need way to track what has and has not been done for a given cruise
-
-Rachel
-- [ ]  Discuss pipeline with Rod and finalize the CTD processing.
-- [ ]  Does Dom needs to reprocess BIOS-SCOPE cruises?
-- [ ]  Figure out why we have two folders for BIOS-SCOPE 91916 cruise on Google Drive ('91916' and '91916_QC'). Sort out which is right and move the other folder
-- [ ]  difference between wet oxygen 1, 2, 3 and salts 1, 2 in the CTD files
