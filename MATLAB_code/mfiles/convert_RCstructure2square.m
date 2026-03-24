@@ -27,10 +27,13 @@ fo = find(ni > min(ni));
 
 % Now make a square matrix:
 temp = [];
+%get the size from thelast column in tableOut
+nrows = size(cell2mat(tableOut{1,end}),2);
+
 for a = 1 : fo(1) - 1
     %fill in the details that are one per cruise
     one = cell2mat(tableOut{1,a});
-    r = repmat(one,1,2500);
+    r = repmat(one,1,nrows);
     temp(:,a) = reshape(r',[],1);
     clear one
 end

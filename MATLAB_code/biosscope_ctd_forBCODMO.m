@@ -1,17 +1,19 @@
 % Need a new script to prepare the BIOS-SCOPE CTD data for BCO-DMO
 % This will be based on existing MATLAB scripts that were written by Ruth
 % Curry and Krista Longnecker
-% Krista Longnecker; 5 March 2026
+% Krista Longnecker; 24 March 2026
 %
 % Some notes from Krista (5 March 2026)
 % (1) This script uses the QC'd data from the BATS team, so the code assumes
 % you have already downloaded those files from the BATS team DropBox
 % account.
 % (2) you will need to update the path information and file names
-% up through row ~82 in this code. There should be no need to change
+% up through row ~38 in this code. There should be no need to change
 % anything past that point.
-% (3) The output from this code will be a CSV file that will be saved in
-% the place defined at line XX
+% (3) You will need the latest season definitions, in an Excel file that is
+% defined at line 35
+% (4) The output from this code will be a CSV file that will be saved in
+% the place defined at line 25
 
 %% >>>>>   % add ./BIOSSCOPE/CTD_BOTTLE/mfiles into matlab path
 addpath(genpath('D:\Dropbox\GitHub_niskin\data_pipeline\MATLAB_code\mfiles')); %This is KL's computer
@@ -24,7 +26,7 @@ rootdir = 'D:\Dropbox\GitHub_niskin\data_pipeline\';
 %outside where GitHub syncs as it could be a large folder)
 datadir = fullfile(rootdir,'RawData'); %put discrete file here
 CTDdatadir = fullfile(rootdir,'RawData\CTDrelease_temp'); %put CTD data here...KEEP name so we know which CTD release we are adding
-newfile = fullfile(datadir,'BSdataOnly.2026.03.08.csv');   % output file
+newfile = fullfile(datadir,'placeholder_BSdataOnly.2026.03.23.csv');   % output file
 
 %what are you going to use for the season information?
 %Use the dates defined in the easy-to-read Excel file and convert to
@@ -149,10 +151,12 @@ clear a
 
 cd(datadir);
 
-%trim some columns, there are items in the discrete file that we do not
-%want to export
-% ID	New_ID	Program	Cruise_ID	Cast	Niskin	yyyymmdd	decy	time_UTC_	latN	lonW	Depth	Nominal_Depth	Temp	CTD_SBE35T_degC_	Conductivity_S_m_	CTD_S	salt	Pressure_dbar_	sig_theta_kg_m_3_	O2_umol_kg_	OxFix	Oxy_Anom1_umol_kg_	BAC_m_1_	Fluo_RFU_	Par	Pot_Temp_degC_	Niskin_temp_degC_	CO2	alk	NO3_NO2_umol_kg_	NO3_NO2_QF	NO3_umol_kg_	NO3_QF	NO2_umol_kg_	NO2_QF	PO4_umol_kg_	PO4_QF	NH4_umol_kg_	NH4_QF	SiO2_umol_kg_	SiO2_QF	POC_ug_kg_	POC_QF	PON_ug_kg_	PON_QF	TOC_umol_kg_	TOC_QF	DOC_umol_kg_	DOC_QF	TN_umol_kg_	TN_QF	TDN_umol_kg_	TDN_QF	Bact_cells_10_8_kg_	Bact_QF	POP_umol_kg_	POP_QF	TDP_nmol_kg_	TDP_QF	SRP_nmol_kg_	SRP_QF	Bsi_umol_kg_	Bsi_QF	Lsi_umol_kg_	Lsi_QF	Pro_cells_ml_	Pro_QF	Syn_cells_ml_	Syn_QF	Piceu_cells_ml_	Piceu_QF	Naneu_cells_ml_	Naneu_QF	BP_Leu_pmol_L_hr_	BP_Leu_QF	TDAA_nmol_L_	TDAA_QF	Asp_nmol_L_	Glu_nmol_L_	His_nmol_L_	Ser_nmol_L_	Arg_nmol_L_	Thr_nmol_L_	Gly_nmol_L_	Tau_nmol_L_	BAla_nmol_L_	Tyr_nmol_L_	Ala_nmol_L_	GABA_nmol_L_	Met_nmol_L_	Val_nmol_L_	Phe_nmol_L_	Ile_nmol_L_	Leu_nmol_L_	Lys_nmol_L_	lt1_mgC_m_3_day_	lt2_mgC_m_3_day_	lt3_mgC_m_3_day_	dark_mgC_m_3_day_	t0_mgC_m_3_day_	pp_mgC_m_3_day_	V1V2_ID	V4_16s_ID	V4_18s_ID	Sunrise	Sunset	MLD_dens125	MLD_bvfrq	MLD_densT2	DCM	VertZone	Season	p1	p2	p3	p4	p5	p6	p7	p8	p9	p10	p11	p12	p13	p14	p15	Chl__	Phae	p18	p19	p20	p21	Kuj_DOC_umol_kg_	Kuj_TN_umol_kg_	metabolite_accession_number
-% toKeep = {'New_ID','Program','Cruise_ID','Cast','yyyymmdd'};
+%trim some columns, there are items that we do not need to export
+toDelete = {'type','mtime','kpar','fluor_offset'};
+
+[c ia ib] = intersect(toDelete,exportSquare.Properties.VariableNames)
+exportSquare(:,ib)=[];
+clear c ia ib
 
 %to do: figure out what format BCO-DMO wants
 disp(['writing table to ', newfile])

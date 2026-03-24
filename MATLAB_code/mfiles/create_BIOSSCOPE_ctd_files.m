@@ -201,8 +201,8 @@ for ii = 1:ncast
    Xout.lon(ii) = CTD.lonW(itop) * -1;
 %  Sunrise() uses lon, W is positive
      [rhr,rmin,shr,smin]=sunrise(dvec(2),dvec(3),dvec(1),Xout.lat(ii),-Xout.lon(ii));
-   Xout.Sunrise(ii) = rhr * 100 + rmin;
-   Xout.Sunset(ii) = shr * 100 + smin;
+   Xout.Sunrise(ii) = floor(rhr * 100 + rmin); %change to add floor here for export 3/24/2026
+   Xout.Sunset(ii) = floor(shr * 100 + smin);%change to add floor here for export 3/24/2026
     clear dvec rhr shr rmin smin
    %  get profile data
    Xout.pr(1:nz,ii) = CTD.Pressure(indx);
