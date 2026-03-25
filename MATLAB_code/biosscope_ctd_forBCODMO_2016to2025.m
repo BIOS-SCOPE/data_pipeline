@@ -27,7 +27,7 @@ rootdir = 'D:\Dropbox\GitHub_niskin\data_pipeline\';
 datadir = fullfile(rootdir,'RawData'); %put discrete file here
 CTDdatadir = fullfile(rootdir,'RawData\CTDdata_Dropbox_compiled2026'); %put CTD data here...KEEP name so we know which CTD release we are adding
 CTDdatadir_older = fullfile(rootdir,'RawData\CTDdata_olderFiles_compiled2026'); %these are the cruises from 2016 to 2018
-newfile = fullfile(datadir,'placeholder_BSdataOnly.2026.03.24.csv');   % output file
+newfile = fullfile(datadir,'BIOSCCOPE_CTDdataforBCODMO.2026.03.25.csv');   % output file
 
 %what are you going to use for the season information?
 %Use the dates defined in the easy-to-read Excel file and convert to
