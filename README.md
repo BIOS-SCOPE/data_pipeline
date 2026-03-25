@@ -1,5 +1,5 @@
 # data_pipeline 
-Updated 8 March 2026; Krista Longnecker 
+Updated 25 March 2026; Krista Longnecker 
 
 The repository was started during a small group meeting for the BIOS-SCOPE project. BIOS-SCOPE conducts multiple cruises and relies on samples and data collected during BATS cruises. The data streams include CTD data and discrete samples. The CTD data are used to calculate derived variables. The data from the discrete samples is pulled together with the CTD data to create a 'master_bottle_file' for everyone to use. This GtiHub repository discusses the CTD data and discrete data files. If you are interested in the data-portal being developed to link in the sequence data, that is available [here](https://github.com/BIOS-SCOPE/data-portal).
 
@@ -10,16 +10,16 @@ Details on the scripts are covered either in the PDF presented [here](https://gi
 
 ## After a cruise 
 * The CTD data goes to Craig Carlson to serve as an archive; no work is done on these files.
-* The BATS team processes the CTD data and posts it on Dropbox. As of fall 2023, Craig and Rachel have access to the processed data on BIOS-SCOPE.
-* Rachel moves the processed CTD data onto the BIOS-SCOPE Google Drive. Data will be here in the BIOS-SCOPE Google Drive:\
+* The BATS team processes the CTD data and posts it on Dropbox. As of spring 2026, Craig, Rachel, and Krista have access to the processed data on BIOS-SCOPE.
+* Rachel (or Krista) moves the processed CTD data onto the BIOS-SCOPE Google Drive. Data will be here in the BIOS-SCOPE Google Drive:\
 ```./1.0 DATA/1.0 ORIG CTD FROM BATS```\
-```./CTDrelease_20230626  (these begin with “1” or “2”)```\
+```./CTDrelease_20250314  (these begin with “1” or “2”)```\
 ```./BIOS-SCOPE Cruises  (these begin with “9”)```
 
 ## Step 1: Download CTD files from BIOS-SCOPE Google drive
 To work on the CTD data, get the data from the BIOS-SCOPE Google Drive. This is best done in batches, where each 'batch' is CTD data from multiple cruises, possibly over multiple years. You will need to process data from BATS cruises separately from BIOSSCOPE cruises.
  
-On Google Drive you will find subfolders for each cruise. Each subfolder contains various ascii files (one per each CTD cast, plus the physf_QC and MLD.dat files). Go into the CTDrelease_20230626 and highlight the cruise folders that are new --> download them to a zip file.\
+On Google Drive you will find subfolders for each cruise. Each subfolder contains various ascii files (one per each CTD cast, plus the physf_QC and MLD.dat files). Go into the CTDrelease_yyyymmdd folder and highlight the cruise folders that are new --> download them to a zip file.\
 Make a processing folder (e.g., BIOSSCOPE_working) and move the downloaded zip archives there. Unzip the files. 
 
 ## Step 2: Shuting's pipeline (in R)
@@ -99,6 +99,9 @@ Krista used BATSallTime repository to calculate the seasons from the BATS CTD da
 
 #### updated July 2024
 Krista made a new repository to do the calculations on the historical BATS data (BATSallTime) because it's too confusing to do the changes needed to make the historical BATS calculations in the same place as the code needed to merge R/MATLAB for future BATS cruises.
+
+## Using this code to prepare CTD data for BCO-DMO
+Krista created a new MATLAB script to prepare CTD data for BCO-DMO. The script is [biosscope_ctd_forBCODMO_2016to2025.m](https://github.com/BIOS-SCOPE/data_pipeline/blob/main/MATLAB_code/biosscope_ctd_forBCODMO_2016to2025.m). The end result is a CSV file that can be uploaded to BCO-DMO. The metadata for each variable is given in ```ParameterMetadata_forBCODMO.csv```, which is also available in this repository.
 
 ## tasks to-do list
 Krista 
