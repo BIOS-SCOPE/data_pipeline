@@ -1,5 +1,5 @@
 # data_pipeline 
-Updated 25 March 2026; Krista Longnecker 
+Updated 26 March 2026; Krista Longnecker 
 
 The repository was started during a small group meeting for the BIOS-SCOPE project. BIOS-SCOPE conducts multiple cruises and relies on samples and data collected during BATS cruises. The data streams include CTD data and discrete samples. The CTD data are used to calculate derived variables. The data from the discrete samples is pulled together with the CTD data to create a 'master_bottle_file' for everyone to use. This GtiHub repository discusses the CTD data and discrete data files. If you are interested in the data-portal being developed to link in the sequence data, that is available [here](https://github.com/BIOS-SCOPE/data-portal).
 
@@ -13,7 +13,7 @@ Details on the scripts are covered either in the PDF presented [here](https://gi
 * The BATS team processes the CTD data and posts it on Dropbox. As of spring 2026, Craig, Rachel, and Krista have access to the processed data on BIOS-SCOPE.
 * Rachel (or Krista) moves the processed CTD data onto the BIOS-SCOPE Google Drive. Data will be here in the BIOS-SCOPE Google Drive:\
 ```./1.0 DATA/1.0 ORIG CTD FROM BATS```\
-```./CTDrelease_20250314  (these begin with “1” or “2”)```\
+```./CTDrelease_20260326  (these begin with “1” or “2”)```\
 ```./BIOS-SCOPE Cruises  (these begin with “9”)```
 
 ## Step 1: Download CTD files from BIOS-SCOPE Google drive
@@ -92,7 +92,7 @@ Krista has Craig's code and is working on this in a separate GitHub repository (
 
 ## Calculating derived variables from BATS data
 #### updated March 2026
-Krista expanding the repository to include code that will prepare the CTD data for BCO-DMO.
+Krista expanding the repository to include code that will prepare the CTD data for BCO-DMO. The BIOS_SCOPE_Team/1.0 DATA/1.0 CURRENT CTD FILES folder is also updated with the current BATS CTD data release (CTDrelease_20260326), which includes all BATS cruises with BIOS-SCOPE samples back to 2017 and the BIOS-SCOPE cruises starting in 2019. The earlier BIOS-SCOPE cruises (2016 to 2018, five cruises AE1614, AE1620, AE1703, AE1712, AE1819) are available in the Google Drive, and were calibrated in 2020. They are not a part of the regular BATS data processing, so they are not a part of the CTD data released by BATS. The updated version of the older cruises have been manually gathered into the 1.0 CURRENT CTD FILES folder. 
 
 #### updated February 2026
 Krista used BATSallTime repository to calculate the seasons from the BATS CTD data. The gliders were in the water less, so this was the best way to get seasonal information.
