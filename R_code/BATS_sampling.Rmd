@@ -1,0 +1,349 @@
+---
+title: "BATS_sampling"
+author: "Krista Longnecker"
+date: "`28 May 2026`"
+output: html_notebook
+---
+
+
+```{r load_libraries, message=FALSE, warning=FALSE}
+rm(list = ls()) #start with a clean workspace (better for testing)
+
+library(data.table) # you need to install this package from CRAN
+library(dplyr)
+library(readr) #this is part of the tidyverse package
+library(here) #install this (once, install.packages("here))
+#library(tidyverse) #amazing 
+library(lubridate) #great for handling date data
+
+# library(reshape2)
+# library(MBA)
+# library(mgcv)
+# library(marmap)
+# library(FNN)
+
+library(readxl) #reading excel files
+library(purrr)
+#library(hms) #for time data
+library(writexl)#Use the following to install castr if it doesnt load above.  See here for details https://rdrr.io/github/jiho/castr/
+#install.packages("remotes")
+#remotes::install_github("jiho/castr")
+#library(castr)
+```
+
+
+
+
+```{r findDatafiles, message =FALSE}
+baseDir = "D:/Dropbox/GitHub_niskin/data_pipeline/R_code"
+# Define the path to the data file
+wDir <- "../RawData/BATS & HS CAST SHEETS"
+#three folders in there for BATS, BVal, and HS
+
+batsDir <- "BATS Cast Sheets"
+one <- paste0(wDir,"/",batsDir)
+
+#sometimes there is a file labeled 'BIOS-SCOPE', other times there are just individual cast files that are relevant.
+#start by pulling information from any file labeled 'BIOS-SCOPE'
+patterns <- c("BIOS-SCOPE","H-R DOM") #one file with a different extension (cruise 10323)
+possible <- paste(patterns,collapse="|")
+files <- list.files(path = one,pattern = possible,recursive = TRUE, full.names = TRUE)
+
+
+```
+
+```{r doFirstFile}
+#turns out BATS has a sample type that is listed as a number. Will be easier to 
+#merge on that because the names change from sheet to sheet. I will need to confirm
+#that I have guess right about the numbers.
+
+#start with Luis's DNA. I think this is sample number eDNA (number 160)  
+#use the first file to set up the dataframe...
+idx <- 1
+one <- read_excel(files[idx], skip=1,.name_repair = ~make.unique(.x, sep = "_")) #only 2+ instance is renamed
+one <- one %>% mutate(across(everything(), as.character))
+
+#remove last row (BATS repeats information)
+one <- one[-nrow(one),]
+
+#also delete the second Niskin column
+one <- one[,-ncol(one)]
+
+#add all cast information from the file...need some error checking
+# (tidyup names...spelling and match to names/numbers for BIOS-SCOPE samples)
+
+#definitely a better way to do this, but I am running out of steam
+colnames(one) <- gsub("% cast","cast",colnames(one))
+colnames(one) <- gsub("%cast","cast",colnames(one))
+colnames(one) <- gsub("Nisken","niskin",colnames(one))
+colnames(one) <- gsub("Niskin","niskin",colnames(one))
+
+# BATS puts ## of sample type in different row, but that is the one that should match across cruises...
+# search for the number and add to column names in main sheet if it does not already exist
+k <- which (one[1,] > 0) 
+
+# # keep the headers that correspond to the numbers, use this information to backtrack as needed
+# one$sampleNames = colnames(one)[k]
+
+# inefficient, but how my brain is thinking today
+# iterate through all the columns with a number...make a column name if is does not exist
+for (idx2 in 1:length(k)) {
+  #colnames(one)[k][idx2] <- paste0(colnames(one)[k][idx2],"_",as.character(one[1,k[idx2]])) 
+  colnames(one)[k][idx2] <- paste0(as.character(one[1,k[idx2]]) ,"_",colnames(one)[k][idx2]) 
+}
+
+df <- one
+rm(one)
+
+
+```
+
+```{r doRestFiles}
+
+#start with 2 because files[1] was used to setup the matrix
+
+for (idx in 2:length(files)) {
+  #idx <- 116
+  one <- read_excel(files[idx], skip=1,.name_repair = ~make.unique(.x, sep = "_")) #only 2+ instance is renamed
+  #need to make sure there are no empty column names...this happens when the excel file has empty columns...
+  colnames(one)[colnames(one) == "" ] <- "empty"
+  one <- one %>% mutate(across(everything(), as.character))
+  
+  #remove last row (BATS repeats information)
+  one <- one[-nrow(one),]
+  
+  #add all cast information from the file...need some error checking
+  # (tidyup names...spelling and match to names/numbers for BIOS-SCOPE samples)
+  
+  #definitely a better way to do this, but I am running out of steam
+  colnames(one) <- gsub("% cast","cast",colnames(one))
+  colnames(one) <- gsub("%cast","cast",colnames(one))
+  colnames(one) <- gsub("Nisken","niskin",colnames(one))
+  colnames(one) <- gsub("Niskin","niskin",colnames(one))
+
+  # BATS puts ## of sample type in different row, but that is the one that should match across cruises...
+  # search for the number and add to column names in main sheet if it does not already exist
+  k <- which (one[1,] > 0) 
+  
+  # super inefficient, but how my brain is thinking today
+  # iterate through all the columns with a number...make a column name if is does not exist
+  for (idx2 in 1:length(k)) {
+    #colnames(one)[k][idx2] <- paste0(colnames(one)[k][idx2],"_",as.character(one[1,k[idx2]])) 
+    colnames(one)[k][idx2] <- paste0(as.character(one[1,k[idx2]]) ,"_",colnames(one)[k][idx2]) 
+  }
+  
+  
+  df <- bind_rows(df,one)
+  rm(one)
+  
+}
+
+
+```
+
+
+```{r getUnique}
+
+
+```
+
+
+```{r}
+
+write_xlsx(df,'../RawData/test8.xlsx')
+```
+
+
+MUSH below here, leave for now
+
+
+```{r}
+
+idx <- 62
+one <- read_excel(files[idx], skip=1,.name_repair = ~make.unique(.x, sep = "_")) #only 2+ instance is renamed
+#need to make sure there are no empty column names...this happens when the excel file has empty columns...
+colnames(one)[colnames(one) == "" ] <- "empty"
+one <- one %>% mutate(across(everything(), as.character))
+
+#remove last row (BATS repeats information)
+one <- one[-nrow(one),]
+
+#add all cast information from the file...need some error checking
+# (I know names changed as Niskin was spelled wrong for a while)
+step1 = one[,1:2]
+
+#definitely a better way to do this, but I am running out of steam
+colnames(step1) <- gsub("% cast","cast",colnames(step1))
+colnames(step1) <- gsub("%cast","cast",colnames(step1))
+colnames(step1) <- gsub("Nisken","niskin",colnames(step1))
+colnames(step1) <- gsub("Niskin","niskin",colnames(step1))
+
+#find the sample type number in row 1:
+k <- which (one[1,]==160)
+
+t <- as.data.frame(one[,k])
+
+step1[,"BS_eDNA_160"] <- t
+#now, before I use the data, remove the first row
+step1 <- step1[-1,]
+
+df <- bind_rows(df,step1)
+
+```
+
+
+
+
+
+```{r}
+#hard code the data frame
+cols <- c("cast","niskin","depth","flag","BS_HDOM_148","BS_eDNA_160","BS_HRDOM_179","New_ID")
+df <- data.frame(matrix(ncol = length(cols), nrow = 0))
+colnames(df) <- cols
+df <- df %>% mutate(across(everything(), as.character))
+
+```
+
+
+```{r tryNext, results='hide'}
+#no idea how easy this will be to concatenate....let's try and see where the errors come up
+#df <- map_df(files, readxl::read_excel) #this makes a mess, and does not merge based on columns (just appends rows)
+
+
+# 2. Function to get headers without reading full data
+get_headers <- function(file) {
+  headers <- suppressMessages(names(read_excel(file, skip=1, n_max = 0)))
+  return(headers)
+}
+
+# 3. Apply function to all files
+all_headers <- lapply(files, get_headers)
+
+#BATS sheets can have duplicate column names (e.g., two columns labeled 'BS_DOM')
+#so R changes the name to BS_DOM...7 and BS_DOM...8 where the 6/7 are the column in the dataset
+
+# # Optional: Name the list by filename for easy reference
+names(all_headers) <- basename(files)
+unique_headers <- sort(unique(tolower(unlist(all_headers))))
+
+#looking at the list of headers the duplicates are going to make this ridiculous
+
+```
+
+
+
+```{r makeSquare2}
+#try hard coding this...the automated is causing issues
+
+df <- data.frame(matrix(ncol = length(unique_headers), nrow = 0))
+colnames(df) = unique_headers
+df <- df %>% mutate(across(everything(), as.character))
+
+idx <- 1
+one <- read_excel(files[idx], skip=1)
+colnames(one) <- tolower(colnames(one))
+one <- one %>% mutate(across(everything(), as.character))
+
+df <- bind_rows(df,one)
+
+idx <- 2
+one <- read_excel(files[idx], skip=1)
+colnames(one) <- tolower(colnames(one))
+one <- one %>% mutate(across(everything(), as.character))
+
+df <- bind_rows(df,one)
+
+write_xlsx(df,'test5.xlsx')
+
+```
+
+
+
+```{r makeSquare}
+
+#use the unique list of headers to make a square matrix...be sure to track 
+#cruise/folder/year details so I can go back and figure out the issues
+
+#make the data frame first:
+df <- data.frame(matrix(ncol = length(unique_headers), nrow = 0))
+colnames(df) = unique_headers
+
+idx <- 1
+one <- read_excel(files[idx], skip=1)
+df <- bind_rows(list(df,one))
+
+idx <- 2
+one = as.data.frame(as.character(read_excel(files[idx], skip=1)))
+
+df <- bind_rows(list(df,one))
+
+```
+
+
+
+
+
+``` {r}
+library(data.table)
+
+# colnames(one) <- tolower(colnames(one))
+# rbindlist(list(df,one),use.names=TRUE,fill=TRUE)
+
+df <- data.frame(matrix(ncol = length(unique_headers), nrow = 0))
+colnames(df) = unique_headers
+
+idx <- 1
+one <- suppressMessages(read_excel(files[idx], skip=1))
+colnames(one) <- tolower(colnames(one))
+
+DT1 <- data.table(one)
+DT2 <- data.table(df)
+
+l = list(DT1,DT2)
+rbindlist(l,fill=TRUE)
+
+
+rbindlist(list(df,one),use.names=TRUE,fill=TRUE)
+
+
+
+idx <- 2
+one = suppressMessages(read_excel(files[idx], skip=1))
+colnames(one) <- tolower(colnames(one))
+df <- rbindlist(list(df,one),use.names=TRUE,fill=TRUE)
+
+```
+
+```{r}
+library(tidyr)
+library(readr)
+result <- files <- list.files(path = one,pattern = "BIOS-SCOPE",recursive = TRUE, full.names = TRUE) %>% 
+  map_df(~read_excel(.x) %>% mutate(across(.fns = as.character))) %>%
+  type_convert()
+
+
+```
+
+
+
+# 2. Read and combine them into one data frame
+# map_df applies read_excel to each file path and binds them by row
+combined_data <- D %>% 
+  map_df(~ read_excel(.))
+
+# Assign names to the file vector so map_df can use them as IDs
+names(files) <- basename(files)
+
+combined_data <- files %>% 
+  map_df(~ read_excel(.), .id = "source_file")
+
+
+```
+
+
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
