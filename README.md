@@ -1,5 +1,5 @@
 # data_pipeline 
-Updated 26 March 2026; Krista Longnecker 
+Updated 1 June 2026; Krista Longnecker 
 
 The repository was started during a small group meeting for the BIOS-SCOPE project. BIOS-SCOPE conducts multiple cruises and relies on samples and data collected during BATS cruises. The data streams include CTD data and discrete samples. The CTD data are used to calculate derived variables. The data from the discrete samples is pulled together with the CTD data to create a 'master_bottle_file' for everyone to use. This GtiHub repository discusses the CTD data and discrete data files. If you are interested in the data-portal being developed to link in the sequence data, that is available [here](https://github.com/BIOS-SCOPE/data-portal).
 
@@ -90,7 +90,10 @@ Craig currently working in R to make one single cast for each cruise so we can p
 For the data portal, using these synpotic casts, the idea is to use cast and nominal depth as the key for merging.
 Krista has Craig's code and is working on this in a separate GitHub repository (7/11/2024)
 
-## Calculating derived variables from BATS data
+## Other notes...side uses of this repository
+#### updated June 2026
+Start gathering up details on the BIOS-SCOPE samples collected by the BATS team. Using their sampling logs to generate an inventory.
+
 #### updated March 2026
 Krista expanding the repository to include code that will prepare the CTD data for BCO-DMO. The BIOS_SCOPE_Team/1.0 DATA/1.0 CURRENT CTD FILES folder is also updated with the current BATS CTD data release (CTDrelease_20260326), which includes all BATS cruises with BIOS-SCOPE samples back to 2017 and the BIOS-SCOPE cruises starting in 2019. The earlier BIOS-SCOPE cruises (2016 to 2018, five cruises AE1614, AE1620, AE1703, AE1712, AE1819) are available in the Google Drive, and were calibrated in 2020. They are not a part of the regular BATS data processing, so they are not a part of the CTD data released by BATS. The updated version of the older cruises have been manually gathered into the 1.0 CURRENT CTD FILES folder. 
 
