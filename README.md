@@ -80,8 +80,8 @@ At this point, you do have to do some manual copy/pasting:
 * Get the headers with the proper colors - this is the first row in the 'Bottle File Header' worksheet.
 * Update the log and save the discrete file with a new date.
 
-:star: :star: **New --> February 2025**\
-Upload this new discrete file back to the BIOS-SCOPE (working) Google Drive. To do this and still retain the links do the following:
+## Step 5: Upload this new discrete file back to the BIOS-SCOPE (working) Google Drive 
+To do this and still retain the links do the following:
 * Put a copy of the latest file into the 'old versions' folder with a date 
 * Right click on the latest file in the BIOS-SCOPE Working Google Drive
 * Scroll down to File Information, and then Manage Versions
