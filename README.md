@@ -1,5 +1,5 @@
 # data_pipeline 
-Updated 1 June 2026; Krista Longnecker 
+Updated 6 June 2026; Krista Longnecker 
 
 The repository was started during a small group meeting for the BIOS-SCOPE project. BIOS-SCOPE conducts multiple cruises and relies on samples and data collected during BATS cruises. The data streams include CTD data and discrete samples. The CTD data are used to calculate derived variables. The data from the discrete samples is pulled together with the CTD data to create a 'master_bottle_file' for everyone to use. This GtiHub repository discusses the CTD data and discrete data files. If you are interested in the data-portal being developed to link in the sequence data, that is available [here](https://github.com/BIOS-SCOPE/data-portal).
 
@@ -10,7 +10,7 @@ Details on the scripts are covered either in the PDF presented [here](https://gi
 
 ## After a cruise 
 * The CTD data goes to Craig Carlson to serve as an archive; no work is done on these files.
-* The BATS team processes the CTD data and posts it on Dropbox. As of spring 2026, Craig, Rachel, and Krista have access to the processed data on BIOS-SCOPE.
+* The BATS team processes the CTD data. For the BATS cruises, use the data at BCO-DMO. BATS is updating their cruise data at BCO-DMO every six months. For the BIOS-SCOPE cruises, these files are transferred to us separately. As of spring 2026, Craig, Rachel, and Krista have access to the processed data on BIOS-SCOPE.
 * Rachel (or Krista) moves the processed CTD data onto the BIOS-SCOPE Google Drive. Data will be here in the BIOS-SCOPE Google Drive:\
 ```./1.0 DATA/1.0 ORIG CTD FROM BATS```\
 ```./CTDrelease_20260326  (these begin with “1” or “2”)```\
@@ -23,9 +23,11 @@ On Google Drive you will find subfolders for each cruise. Each subfolder contain
 Make a processing folder (e.g., BIOSSCOPE_working) and move the downloaded zip archives there. Unzip the files. 
 
 ## Step 2: Shuting's pipeline (in R)
-This file was updated by Krista (January 2024), the update modified Shuting's code to go through a series of folders to find new CTD data. The code will require you to indicate if you are working on 'BATS' data or 'BIOSSCOPE' data (at line 30). The updated R file is [Join_BATS_All_with_master_v3.R](https://github.com/BIOS-SCOPE/data_pipeline/blob/main/R_code/Join_BATS_All_with_master_v3.R), and you can click the link to see the file on GitHub. 
+This file was last updated by Krista (June 2026), the lastest update allowed us to use BATS data from BCO-DMO. The code will require you to indicate if you are working on 'BATS' data or 'BIOSSCOPE' data (at line 30). The updated R file is [Join_BATS_All_with_master_v4.R](https://github.com/BIOS-SCOPE/data_pipeline/blob/main/R_code/Join_BATS_All_with_master_v4.R), and you can click the link to see the file on GitHub. 
 
-The code now does the following (after data files have been downloaded from Google Drive as described above:
+Before you dive into the R script, get the latest version of ```BATS_BS_COMBINED_MASTER_latest.xlsx``` from the BIOS-SCOPE Google Drive. Then, update the list of cruises on the CruisesAndStations tab of the worksheet.
+
+Now run the R script that does the following (after data files have been downloaded from Google Drive as described above:
 * read in the current master file (```BATS_BS_COMBINED_MASTER_latest.xlsx```) and then use that to set the headers for the data incoming data
 * get the headers that are used on the BATS CTD data files
 * Go through one cruise at a time and
