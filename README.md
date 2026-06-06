@@ -46,7 +46,7 @@ Now you have to do some manual copy/paste:
 ## Step 3: Ruth Curry's pipeline (in MATLAB)
 Once Shuting's code has been used to add the necessary samples to the master bottle file, then you can run Ruth's code to calculate the derived variables. 
 
-Krista has updated [create_biosscope_files_2026_Krista.m ](https://github.com/BIOS-SCOPE/data_pipeline/blob/main/MATLAB_code/create_biosscope_files_2026.m ) to pick up where the previous processing script ended. This file will start with 10390 (March 2022) and then go to June 2025. The path information is set for Krista's desktop, this would need to be updated for other computers.
+Krista has updated [create_biosscope_files_2026_Krista.m ](https://github.com/BIOS-SCOPE/data_pipeline/blob/main/MATLAB_code/create_biosscope_files_2026.m ) to pick up where the previous processing script ended. The path information is set for Krista's desktop, this would need to be updated for other computers.
 
 One special note about season transition dates. There is now an Excel file ```BATS_seasons_wKLedits.2026.02.13.xlsx``` and the MATLAB code is now set to read in that file and convert it to the format used by Ruth. 
 
