@@ -96,7 +96,8 @@ Krista has Craig's code and is working on this in a separate GitHub repository (
 
 ## Other notes...side uses of this repository
 #### updated June 2026
-Start gathering up details on the BIOS-SCOPE samples collected by the BATS team. Using their sampling logs to generate an inventory. Use the ```BATS_sampling_all.R``` script that is in the R code folder.
+* Start gathering up details on the BIOS-SCOPE samples collected by the BATS team. Using their sampling logs to generate an inventory. Use the ```BATS_sampling_all.R``` script that is in the R code folder.
+* also use ```MATLAB_code/makeLUtableForSynoptic.m``` to make a table with the derived values calculated in MATLAB, one line per cruise. Need this for makeSynoptic. 
 
 #### updated March 2026
 Krista expanding the repository to include code that will prepare the CTD data for BCO-DMO. The BIOS_SCOPE_Team/1.0 DATA/1.0 CURRENT CTD FILES folder is also updated with the current BATS CTD data release (CTDrelease_20260326), which includes all BATS cruises with BIOS-SCOPE samples back to 2017 and the BIOS-SCOPE cruises starting in 2019. The earlier BIOS-SCOPE cruises (2016 to 2018, five cruises AE1614, AE1620, AE1703, AE1712, AE1819) are available in the Google Drive, and were calibrated in 2020. They are not a part of the regular BATS data processing, so they are not a part of the CTD data released by BATS. The updated version of the older cruises have been manually gathered into the 1.0 CURRENT CTD FILES folder. 
