@@ -1,16 +1,16 @@
 # data_pipeline 
-Updated 6 June 2026; Krista Longnecker 
+Updated 7 June 2026; Krista Longnecker 
 
-The repository was started during a small group meeting for the BIOS-SCOPE project. BIOS-SCOPE conducts multiple cruises and relies on samples and data collected during BATS cruises. The data streams include CTD data and discrete samples. The CTD data are used to calculate derived variables. The data from the discrete samples is pulled together with the CTD data to create a 'master_bottle_file' for everyone to use. This GtiHub repository discusses the CTD data and discrete data files. If you are interested in the data-portal being developed to link in the sequence data, that is available [here](https://github.com/BIOS-SCOPE/data-portal).
+BIOS-SCOPE conducts multiple cruises and relies on samples collected during BATS cruises. The data streams include CTD data and discrete samples. The CTD data are used to calculate derived variables. The data from the discrete samples is pulled together with the CTD data to create a 'master_bottle_file' for everyone to use. This GtiHub repository discusses the CTD data and discrete data files. If you are interested in the data-portal being developed to link in the sequence data, that is available [here](https://github.com/BIOS-SCOPE/data-portal).
 
-The remainder of this repository describes how this is done, provides details and code from different people, and ends with a to-do list for each member of this small group.
+The remainder of this repository describes how this is done, provides details and code from different people, and ends with a to-do list.
 
 Details on the scripts are covered either in the PDF presented [here](https://github.com/BIOS-SCOPE/data_pipeline/blob/main/Longnecker_BIOSSCOPE_dataPipeline_update_2026.pdf) or in this figure:
 <img src="https://github.com/BIOS-SCOPE/data_pipeline/blob/main/data_pipeline_figure.2026.02.13.jpg"  width="105%" height="105%">
 
 ## After a cruise 
 * The CTD data goes to Craig Carlson to serve as an archive; no work is done on these files.
-* The BATS team processes the CTD data. For the BATS cruises, use the data at BCO-DMO. BATS is updating their cruise data at BCO-DMO every six months. For the BIOS-SCOPE cruises, these files are transferred to us separately. As of spring 2026, Craig, Rachel, and Krista have access to the processed data on BIOS-SCOPE.
+* The BATS team processes the CTD data. For the BATS cruises, use the data at BCO-DMO, which is updated at BCO-DMO every six months. For the BIOS-SCOPE cruises, files are transferred to us separately. As of spring 2026, Craig, Rachel, and Krista have access to the processed data on BIOS-SCOPE.
 * Rachel (or Krista) moves the processed CTD data onto the BIOS-SCOPE Google Drive. Data will be here in the BIOS-SCOPE Google Drive:\
 ```./1.0 DATA/1.0 ORIG CTD FROM BATS```\
 ```./CTDrelease_20260326  (these begin with “1” or “2”)```\
@@ -56,6 +56,8 @@ Generally the rest of the code does the following:
 *	Reads Master bottle file, creates structure with added fields
 *	Loops through bottle data cruise by cruise, matches the corresponding CTD cast, computes a set derived physical properties and adds the values to the bottle cast
 *	The end result is a file that is called ```ADD_to_MASTER_temporary.csv``` which is saved to a holding zone
+
+Then (this is awkward, but on the list to change), copy the new derived variables into the bottle file (sunrise, sunset, MLD calculations, vertical zone, and seasons).
  
 The next step is to use ```Join_discreteData_v3.R``` to add the calculated variables to the existing bottle file.
 
@@ -110,4 +112,5 @@ Krista created a new MATLAB script to prepare CTD data for BCO-DMO. The script i
 
 ## tasks to-do list
 Krista 
+- [ ] Make the merge of derived values into the existing bottle file smoother, the copy-paste is not ideal
 - [ ] Need way to track what has and has not been done for a given cruise
