@@ -6,11 +6,14 @@
 # Krista Longnecker, 26 January 2024 change sheet name to 'DATA' (was 'BATS_BS bottle file')
 # Krista, 17 May 2024, adding points to help set the path
 # Krista, 27 January 2025 correcting typo in section setting the nominal depths
+# Krista, 6 June 2026, adding more BATS data and update to use BATS data from BCO-DMO
 # 
 # Some notes from Krista: 
-# (1) you will need to update the path information and file names up through row ~40 in this code. 
+# (1) Make sure the list of cruisesAndStations is updated in the bottle file 
+# before running this code
+# (2) you will need to update the path information and file names up through row ~40 in this code. 
 # There should be no need to change anything past that point.
-# (2) This script will open a single worksheet in Excel - the rows there need to be
+# (3) This script will open a single worksheet in Excel - the rows there need to be
 # appended to the end of the existing bottle file; you should also update the log in the bottle
 # file before saving the resulting Excel file with a new date
 
@@ -29,7 +32,6 @@ if (OS == "unix"){
   dPath <- "/users/klongnecker/" 
 } else if (OS == "windows"){
   # windows file path
-  #dPath <- "C:/Users/klongnecker/Documents/Dropbox/Current projects/Kuj_BIOSSCOPE/RawData/DataFiles_CTDandDiscreteSamples/" 
   dPath <- "D:/Dropbox/GitHub_niskin/data_pipeline/RawData/"
 } else {
   #something went wrong...could not determine the operating system
@@ -46,10 +48,11 @@ sheetName <- 'DATA' #updating, Krista keeps typing this wrong! was: BATS_BS bott
 gDir <- "D:/Dropbox/GitHub_niskin/data_pipeline/"
 headers <- read.csv(paste0(gDir,"CTD_headerInformation.csv"),sep=",", fileEncoding="UTF-8-BOM", header=F)
 
-cruiseType <- 'BIOSSCOPE' #either BIOSSCOPE or BATS #change as needed
+cruiseType <- 'BATS' #either BIOSSCOPE or BATS #change as needed
 
 # where is the working directory with the new CTD data (this folder is NOT synced to GitHub)
-newDir <- "D:/Dropbox/GitHub_niskin/data_pipeline/RawData/CTDrelease_20250829-92511"
+newDir <- "D:/Dropbox/GitHub_niskin/data_pipeline/RawData/CTDrelease_20260326"
+#newDir <- "D:/Dropbox/GitHub_niskin/data_pipeline/RawData/testing"
 
 
 
@@ -68,7 +71,7 @@ discrete <- suppressWarnings(read_excel(paste0(dPath,fName),
                                         sheet = sheetName,
                                         guess_max = Inf))
 
-#get the BATS cruise information from existing bottle file
+#get the BATS cruise information from existing bottle file 
 convertBATS2 <- suppressWarnings(read_excel(paste0(dPath,fName),sheet = 'CruisesAndStations'))
 convertBATS2$Cruise <- suppressWarnings(as.integer(convertBATS2$Cruise))
 rm(dPath,fName,sheetName)
@@ -105,9 +108,17 @@ for (a in 1:length(D)) {
   
   check = new$Niskin_ID[1]
 
+  #Krista note 6 June 2026
+  #BATS now releases all of their data through BCO-DMO, so the data are a full release and will definitely
+  #include data we already have. Instead of stopping here, change to skipping the cruises we have
   if (!is.na(match(check,discrete$ID))){
-    stop("Something is wrong, this sample is already in discrete data file'")
-  }
+    #stop("Something is wrong, this sample is already in discrete data file'")
+    print(paste0("We already have cruise/cast/niskin: ",check))
+    next }
+  else {
+      print(paste0("Working on this cruise/cast/niskin: ",check))
+    }
+
   rm(check)
 
 
@@ -223,7 +234,12 @@ for (a in 1:length(D)) {
     #first, use convertBATS2 to find the matching cruise_ID; first 5 chars in this:
     bi <- substr(D[[a]],1,5)
     m <- which(convertBATS2$Cruise %in% bi)
-    new$Cruise_ID <- rep(convertBATS2$Cruise_ID[m],nrow(new))
+    #if you have an error here, you have not updated the list of BATS cruises in the bottle file (KL note 6/6/2026)
+    tryCatch({new$Cruise_ID <- rep(convertBATS2$Cruise_ID[m],nrow(new))
+    }, error = function(msg){
+      stop(paste('ERROR: You probably did not update the list of BATS cruises in the discrete file'))
+    })
+      
     rm(bi,m)
   
     

@@ -15,6 +15,7 @@
 % from Ruth and will do so in a way that makes it easy to keep making
 % seasonal updates moving forward
 % Krista Longnecker, updated 13 February 2026 ---> new seasons
+% Krista Longnecker, updated 7 June 2026 --> using data from BCO-DMO
 
 %% >>>>>   % add ./BIOSSCOPE/CTD_BOTTLE/mfiles into matlab path
 addpath(genpath('D:\Dropbox\GitHub_niskin\data_pipeline\MATLAB_code\mfiles')); %This is KL's computer
@@ -26,7 +27,9 @@ rootdir = 'D:\Dropbox\GitHub_niskin\data_pipeline\';
 %use the datadir to temporarily hold your CTD data (make sure this is
 %outside where GitHub syncs as it could be a large folder)
 datadir = fullfile(rootdir,'RawData'); %put discrete file here
+
 CTDdatadir = fullfile(rootdir,'RawData\CTDrelease_20260326'); %put CTD data here...KEEP name so we know which CTD release we are adding
+%CTDdatadir = fullfile('D:\Dropbox\Current projects\Kuj_BIOSSCOPE\RawData\CTDdata\BSworkingCurrent'); %testing
 
 %Bfile is the name of the bottle file you downloaded from the Google Drive
 Bfile = fullfile(datadir,'BATS_BS_COMBINED_MASTER_latest.xlsx');
@@ -244,13 +247,16 @@ for icru = 1:ncru
     % use logical indexing to find cruise/cast match
     castlist = unique(BB{isCru,icol.cast});
     ncast = length(castlist);
-    
     for icast = 1:ncast
         theCast = castlist(icast);
-        castIndx = isCru & BBadd.Cast == theCast;
-        ictd = find(CTD.cast == theCast);
+        castIndx = isCru & strcmp(BBadd.Cast,theCast);
+
+        %comment KL 6/6/2026 ictd = strcmp(CTD.cast,theCast);
+        ictd = find(CTD.cast == str2double(theCast));
+
         if isempty(ictd)
-            disp(['WARNING: no CTD cast found for bottle cast ',theCru,' Cast #',num2str(theCast)]);
+            %disp(['WARNING: no CTD cast found for bottle cast ',theCru,' Cast #',num2str(theCast)]);
+            disp(['WARNING: no CTD cast found for bottle cast ',theCru,' Cast #',theCast]); %KL change 6/6/2026
             continue
         end
         if ~isempty(ictd)
@@ -259,11 +265,11 @@ for icru = 1:ncru
             iend = find(castIndx == 1,1,'last');
             for ibtl = istart:iend
                 zlev = BB{ibtl,icol.depth};  %
-                if zlev > 0    % skip bottles where depth is undefined                
+                if zlev > 0    % skip bottles where depth is undefined  
                     BBadd.Sunrise(ibtl) = floor(CTD.Sunrise(ictd));
                     BBadd.Sunset(ibtl) = floor(CTD.Sunset(ictd));
                     BBadd.Season(ibtl) = CTD.Season(ictd);
-                    BBadd.MLD_dens125(ibtl) = CTD.MLD_dens125(ictd);
+                    BBadd.MLD_dens125(ibtl) = CTD.MLD_dens125(ictd);                   
                     BBadd.MLD_bvfrq(ibtl) = CTD.MLD_bvfrq(ictd);
                     BBadd.MLD_densT2(ibtl) = CTD.MLD_densT2(ictd);
                     BBadd.DCM(ibtl) = CTD.DCM(ictd);
@@ -292,26 +298,8 @@ newfile = fullfile(datadir,'ADD_to_MASTER_temporary.csv');   % output file
 disp(['writing table to ', newfile])
 BBtab = struct2table(BBadd);
 
-if 1
-    %add option to trim down BBtab to only include new additions
-    %Krista, January 2024
-    keep = double.empty;
-    %get the five digit BATS cruise numbers from new_cruises
-    for a = 1:size(new_cruises,1)
-        one = new_cruises(a,1:5);
-        s = contains(string(BBtab.New_ID),one);
-        ks = find(s==1);
-        keep = cat(1,keep,ks);
-        clear one s ks
-    end
-    clear a
-    
-    forExport = BBtab(keep,:);
-    writetable(forExport,newfile);
-else
-    %export everything - will match the number of rows in the discrete file
-    writetable(BBtab,newfile);
-end
-
-
+%export everything - will match the number of rows in the discrete file
+% June 2026 note: with the data coming from BCO-DMO, we will always have
+% new and old data together so you MUST export everything
+writetable(BBtab,newfile);
 
