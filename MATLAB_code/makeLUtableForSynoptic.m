@@ -1,10 +1,6 @@
-%Set up to calculate Ruth's derived variables from all BATS cruises (e.g.,
-%MLD, season, and VZ); starting with BATS cruise #1
-%based on Ruth's prior code : create_biosscope_files_2022_2023.m
-% Original code from Ruth Curry, BIOS / ASU
-% Krista Longnecker; 8 February 2024
-% Use this file to make a lookup table that will feed into makeSynoptic
-% (which is in R right now...switching between languages)
+% Use this file to make a lookup table with the calculated variables 
+% that will feed into makeSynoptic
+% (which is in R right now...switching between languages..slightly unfortunate)
 % Krista Longnecker; 21 June 2024
 % Krista Longnecker, 6 June 2026
 clear all 
@@ -18,19 +14,9 @@ rootdir = 'D:\Dropbox\GitHub_niskin\data_pipeline\RawData\';
 %Krista has put the next two folders outside the space accessible by GitHub
 %These files are too large to put into GitHub
 workdir = fullfile(rootdir,'CTDrelease_20260326\');
-% workdir = fullfile(rootdir,'RCcalcBATS\data_copySmall_testing\');
+outdir = fullfile(rootdir);
 
-outdir = fullfile(rootdir,'data_holdingZone\');
-
-%set this to one if you want to see a plot for each cast (that will clearly
-%be a ton of plots, so this is best used if you to look at a preset number
-%of casts within the full set of casts)
-do_plots = 0;
-   
-%now do the calculations
-
-%Ruth set this up for txt files, but the BATS txt files are a pain, use
-%the BATS *mat files
+%start with some tidying up
 cd(workdir)
 dirlist = dir('*.mat');
 %delete some names...not the best way to do this, but will work
@@ -54,17 +40,27 @@ stepOne = table();
 % doFiles = ; %use for testing, more files in case you need to test the loop
 doFiles = nfiles; %do everything
 for ii = 1:doFiles;
-   fname = dirlist(ii).name;
-   infile = fullfile(workdir,fname);
-   
-   %use modified function from KL, 2/8/2024
-   CTD = calculate_BATSderivedVariables(infile,do_plots,outdir);
-   %make a table, easier to manipulate; have to write a custom script to
-   %make a table given the complexity of these structures
-   trim = 1; %set this to one to only keep the values that are one per cruise/cast
-   T = convert_RCstructure2table(CTD,trim); %this is a new KL function 6/21/2024
-   stepOne = [stepOne;T];
-   
+    fname = dirlist(ii).name;
+    infile = fullfile(workdir,fname);
+    
+    S = whos('-file',infile); 
+    Sn = {S.name}; 
+    %then pull the data from the structure, will be gf#####_data (where ##### is
+    %the BATS cruise id)
+    r = contains(Sn,'_data');
+    kr = find(r==1); %which part of the structure has the data?
+    riMAT = load(infile,Sn{kr});
+    %ugly MATLAB hack to pull out the data into a matrix and put into Ruth's
+    %format; TTin is a 1 x 12 cell, one variable per cell
+    v = fieldnames(riMAT);
+    TTin = riMAT.(v{1}); %this will read in matrix
+    
+    %make a table, easier to manipulate; have to write a custom script to
+    %make a table given the complexity of these structures
+    trim = 1; %set this to one to only keep the values that are one per cruise/cast
+    % T = convert_RCstructure2table(CTD,trim); %this is a new KL function 6/21/2024
+    T = convert_RCstructure2table(TTin,1);
+    stepOne = [stepOne;T];
    clear idx T
 end
 clear ii
