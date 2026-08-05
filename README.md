@@ -1,5 +1,8 @@
 # data_pipeline 
-Updated 7 June 2026; Krista Longnecker 
+Updated 5 August 2026; Krista Longnecker 
+
+This data_pipeline is also available at Zenodo at this DOI:
+<img width="191" height="20" alt="image" src="https://github.com/user-attachments/assets/b37fbb40-e86b-4c72-9fe6-6655a58b311b" />
 
 BIOS-SCOPE conducts multiple cruises and relies on samples collected during BATS cruises. The data streams include CTD data and discrete samples. The CTD data are used to calculate derived variables. The data from the discrete samples is pulled together with the CTD data to create a 'master_bottle_file' for everyone to use. This GtiHub repository discusses the CTD data and discrete data files. If you are interested in the data-portal being developed to link in the sequence data, that is available [here](https://github.com/BIOS-SCOPE/data-portal).
 
