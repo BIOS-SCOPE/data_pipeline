@@ -1,5 +1,6 @@
 #
 CMAP/data/
 RawData/
-
+.git
+.Rhistory
 
