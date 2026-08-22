@@ -92,11 +92,6 @@ To do this and still retain the links do the following:
 * Scroll down to File Information, and then Manage Versions
 * Select 'upload new version' from the menu box that will come up.
 
-## Craig's need for a synoptic profile for each BATS cruise
-Craig currently working in R to make one single cast for each cruise so we can pull in data from pumps etc.
-For the data portal, using these synpotic casts, the idea is to use cast and nominal depth as the key for merging.
-Krista has Craig's code and is working on this in a separate GitHub repository (7/11/2024)
-
 ## Other notes...side uses of this repository
 #### updated June 2026
 * Start gathering up details on the BIOS-SCOPE samples collected by the BATS team. Using their sampling logs to generate an inventory. Use the ```BATS_sampling_all.R``` script that is in the R code folder.
