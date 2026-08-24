@@ -26,7 +26,7 @@ On Google Drive you will find subfolders for each cruise. Each subfolder contain
 Make a processing folder (e.g., BIOSSCOPE_working) and move the downloaded zip archives there. Unzip the files. 
 
 ## Step 2: Shuting's pipeline (in R)
-This file was last updated by Krista (June 2026), the lastest update allowed us to use BATS data from BCO-DMO. The code will require you to indicate if you are working on 'BATS' data or 'BIOSSCOPE' data (at line 30). The updated R file is [Join_BATS_All_with_master_v4.R](https://github.com/BIOS-SCOPE/data_pipeline/blob/main/R_code/Join_BATS_All_with_master_v4.R), and you can click the link to see the file on GitHub. 
+This file was last updated by Krista (June 2026), the lastest update allowed us to use BATS data from BCO-DMO. The code will require you to indicate if you are working on 'BATS' data or 'BIOSSCOPE' data (at line 30). The updated R file is [Join_BATS_All_with_master_v5.R](https://github.com/BIOS-SCOPE/data_pipeline/blob/main/R_code/Join_BATS_All_with_master_v5.R), and you can click the link to see the file on GitHub. 
 
 Before you dive into the R script, get the latest version of ```BATS_BS_COMBINED_MASTER_latest.xlsx``` from the BIOS-SCOPE Google Drive. Then, update the list of cruises on the CruisesAndStations tab of the worksheet.
 
@@ -51,7 +51,7 @@ Once Shuting's code has been used to add the necessary samples to the master bot
 
 Krista has updated [create_biosscope_files_2026_Krista.m ](https://github.com/BIOS-SCOPE/data_pipeline/blob/main/MATLAB_code/create_biosscope_files_2026.m ) to pick up where the previous processing script ended. The path information is set for Krista's desktop, this would need to be updated for other computers.
 
-One special note about season transition dates. There is now an Excel file ```BATS_seasons_wKLedits.2026.02.13.xlsx``` and the MATLAB code is now set to read in that file and convert it to the format used by Ruth. 
+One special note about season transition dates. There is now an Excel file ```BATS_seasons_wKLedits.2026.06.15.xlsx``` and the MATLAB code is now set to read in that file and convert it to the format used by Ruth. 
 
 Generally the rest of the code does the following:
 *	Loads CTD files from BATS, labels them with physical framework parameters
