@@ -1,5 +1,5 @@
 # data_pipeline 
-Updated 5 August 2026; Krista Longnecker 
+Updated 24 August 2026; Krista Longnecker 
 
 This data_pipeline is also available at Zenodo at this DOI:
 <img width="191" height="20" alt="image" src="https://github.com/user-attachments/assets/b37fbb40-e86b-4c72-9fe6-6655a58b311b" />
@@ -20,7 +20,7 @@ Details on the scripts are covered either in the PDF presented [here](https://gi
 ```./BIOS-SCOPE Cruises  (these begin with “9”)```
 
 ## Step 1: Download CTD files from BIOS-SCOPE Google drive
-To work on the CTD data, get the data from the BIOS-SCOPE Google Drive. This is best done in batches, where each 'batch' is CTD data from multiple cruises, possibly over multiple years. You will need to process data from BATS cruises separately from BIOSSCOPE cruises.
+To work on the CTD data, get the data from the BIOS-SCOPE Google Drive (for BIOS-SCOPE cruises) or from BCO-DMO (for BATS cruises). This is best done in batches, where each 'batch' is CTD data from multiple cruises, possibly over multiple years. You will need to process data from BATS cruises separately from BIOSSCOPE cruises.
  
 On Google Drive you will find subfolders for each cruise. Each subfolder contains various ascii files (one per each CTD cast, plus the physf_QC and MLD.dat files). Go into the CTDrelease_yyyymmdd folder and highlight the cruise folders that are new --> download them to a zip file.\
 Make a processing folder (e.g., BIOSSCOPE_working) and move the downloaded zip archives there. Unzip the files. 
