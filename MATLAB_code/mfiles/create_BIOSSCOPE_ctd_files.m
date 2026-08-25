@@ -1,4 +1,4 @@
-function Xout = create_BIOSSCOPE_ctd_files(infile, MAXZ, trans_dates, do_plots)
+function Xout = create_BIOSSCOPE_ctd_files(infile, MAXZ, trans_dates, do_plots, showOutput)
 % function Xout = create_BIOSSCOPE_ctd_files(infile)
 % Reads a  space-separated *_ctd.txt (from BATS group),
 % creates a structure with added fields, and writes a .csv file 
@@ -19,13 +19,14 @@ function Xout = create_BIOSSCOPE_ctd_files(infile, MAXZ, trans_dates, do_plots)
 %           file for the entire cruise
 %  Xout  :  a matlab structure with fields storing info for entire
 %           cruise in row vectors and rectangular matrices.
-
+%adding showOutput to allow the option to reduce some of the output as disp
+% Krista Longnecker, 24 August 2026 --> decrease display output
 % NOTE:  Vertical zones are computed using ML_dens125
 %%  Read file into rectangular array, and store each column as a field in structure CTD
 fid = fopen(infile,'r');
 
 disp(['Reading ',infile]);
-disp('   be patient..... ');
+%disp('   be patient..... '); %turn off some output, 8/24/2026
 fmt = '%f%f%f%f%f%f%f%f%f%f%f%f%f%[^\n\r]';
 
 TTin=textscan(fid,fmt,'Delimiter', '', 'WhiteSpace', '', 'EmptyValue' ,NaN, 'ReturnOnError', false);
@@ -145,6 +146,7 @@ clear XX
 
 
 %  rectangular arrays
+MAXZ = round(max(CTD.Pressure)); %I think if I use Pressure this will be OK KL 6/12/2026
 XX= ones(MAXZ,ncast) .* NaN;
 Xout.pr = XX;
 Xout.de = XX;
@@ -187,8 +189,8 @@ for ii = 1:ncast
        %KL 2/12/2026: set scripts to clear the outdir before starting, so 
        % that gets rid of one cause for this error. However, do not delete
        % the check as will need to know if I cannot make a square matrixc
-       %keyboard
        error('foo:bar',['Data arrays not long enough. In the later case, increase MAXZ to at least ',num2str(nz)])
+       keyboard
    end
    Xout.mtime(ii) = decyear2dnum(CTD.decy(itop));
       dvec = datevec(Xout.mtime(ii));
@@ -221,7 +223,9 @@ for ii = 1:ncast
        if max(ibad) < 5
            Xout.sa(ibad,ii) = Xout.sa(max(ibad)+1,ii);
            CTD.Salt(indx)= Xout.sa(1:nz,ii);
-           disp('Replaced missing salts at top of cast')
+           if showOutput
+                disp('Replaced missing salts at top of cast')
+           end
        end
    end
     % compute derived variables
@@ -292,7 +296,9 @@ if do_plots
          plot(Xfilt,XX.Pressure,'-k','Linewidth',1.5);
 end
      if abs(bias) > 0.005
-       disp('Applying bias to fluor profile')
+        if showOutput
+            disp('Applying bias to fluor profile')
+        end
        Xfilt = Xfilt - bias;
 if do_plots
     plot(Xfilt,XX.Pressure,'-r','Linewidth',1.5);
@@ -329,7 +335,9 @@ if do_plots
     plot(xlim(),[ML_ToUse,ML_ToUse],'--m','Linewidth',1)
 end
 if isnan(DCM.itop)
+    if showOutput
        disp('top of DCM within ML')
+    end
 end
     
     clear filt_width  Xfilt izmax 
@@ -407,7 +415,9 @@ clear din parin
 % Output the cast
    fmt = '%8d_%1d%04d_%03d_ctd.csv';
    outfile = sprintf(fmt,XX.yyyymmdd(1),Xout.type(ii),XX.Cruise(1),XX.Cast(1));
-   disp(['Writing ',outfile]);
+   if showOutput
+       disp(['Writing ',outfile]);
+   end
    TTcast = struct2table(XX);
    writetable(TTcast,outfile);
   
@@ -417,8 +427,10 @@ end % for ii
 
    fmt = 'CRU_%1d%04d_ctd.csv';
    outfile = sprintf(fmt,Xout.type(1),CTD.Cruise(1));
-   disp(['Writing ',outfile]);
-   
+   if showOutput
+       disp(['Writing ',outfile]);
+   end
+
    % replace any NaNs in CTD struct with -999.
    flist = fieldnames(CTD);
    nfields = length(flist);
@@ -434,7 +446,7 @@ end % for ii
         close all
     end
 %
-disp('Done!');
+%disp('Done!');
 end %function
 
 

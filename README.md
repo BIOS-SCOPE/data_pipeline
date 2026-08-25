@@ -118,3 +118,4 @@ Krista created a new MATLAB script to prepare CTD data for BCO-DMO. The script i
 Krista 
 - [ ] Make the merge of derived values into the existing bottle file smoother, the copy-paste is not ideal
 - [ ] Need way to track what has and has not been done for a given cruise
+- [ ] Automate download of data file from BCO-DMO
