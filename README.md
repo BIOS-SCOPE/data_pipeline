@@ -9,7 +9,7 @@ BIOS-SCOPE conducts multiple cruises and relies on samples collected during BATS
 The remainder of this repository describes how this is done, provides details and code from different people, and ends with a to-do list.
 
 Details on the scripts are covered either in the PDF presented [here](https://github.com/BIOS-SCOPE/data_pipeline/blob/main/Longnecker_BIOSSCOPE_dataPipeline_update_2026.pdf) or in this figure:
-<img src="https://github.com/BIOS-SCOPE/data_pipeline/blob/main/data_pipeline_figure.2026.02.13.jpg"  width="105%" height="105%">
+<img src="https://github.com/BIOS-SCOPE/data_pipeline/blob/main/data_pipeline_figure_latest.jpg"  width="105%" height="105%">
 
 ## After a cruise 
 * The CTD data goes to Craig Carlson to serve as an archive; no work is done on these files.
@@ -25,7 +25,12 @@ To work on the CTD data, get the data from the BIOS-SCOPE Google Drive (for BIOS
 On Google Drive you will find subfolders for each cruise. Each subfolder contains various ascii files (one per each CTD cast, plus the physf_QC and MLD.dat files). Go into the CTDrelease_yyyymmdd folder and highlight the cruise folders that are new --> download them to a zip file.\
 Make a processing folder (e.g., BIOSSCOPE_working) and move the downloaded zip archives there. Unzip the files. 
 
-## Step 2: Shuting's pipeline (in R)
+## Step 2: Pre-processing CTD files (in MATLAB)
+With data at both BCO-DMO and coming directly to the BIOS-SCOPE project, we need a new pipeline for pre-processing the CTD files.\
+The data at BCO-DMO includes any BATS cruises, Hydrostation S cruises, and the BLOOM cruises. As these go back to the beginning of BATS sampling, this will be more than we generally need.\
+We are also still getting BIOS-SCOPE only data, which is now BIOS-SCOPE cruises and anytime a BIOS-SCOPE sample is collected (on a BATS, HS, or BLOOM cruise). This overlaps a little with the data from BCO-DMO. Hence, at this step, process all the files, but then will have to trim things down as it will be to large if we have all possible cruise/cast/niskin information.
+
+## Step 3: Shuting's pipeline (in R)
 This file was last updated by Krista (June 2026), the lastest update allowed us to use BATS data from BCO-DMO. The code will require you to indicate if you are working on 'BATS' data or 'BIOSSCOPE' data (at line 30). The updated R file is [Join_BATS_All_with_master_v5.R](https://github.com/BIOS-SCOPE/data_pipeline/blob/main/R_code/Join_BATS_All_with_master_v5.R), and you can click the link to see the file on GitHub. 
 
 Before you dive into the R script, get the latest version of ```BATS_BS_COMBINED_MASTER_latest.xlsx``` from the BIOS-SCOPE Google Drive. Then, update the list of cruises on the CruisesAndStations tab of the worksheet.
@@ -46,7 +51,7 @@ Now you have to do some manual copy/paste:
 * Update the log in the master file
 * Save the file with a new date
 
-## Step 3: Ruth Curry's pipeline (in MATLAB)
+## Step 4: Ruth Curry's pipeline (in MATLAB)
 Once Shuting's code has been used to add the necessary samples to the master bottle file, then you can run Ruth's code to calculate the derived variables. 
 
 Krista has updated [create_biosscope_files_2026_Krista.m ](https://github.com/BIOS-SCOPE/data_pipeline/blob/main/MATLAB_code/create_biosscope_files_2026.m ) to pick up where the previous processing script ended. The path information is set for Krista's desktop, this would need to be updated for other computers.
@@ -66,7 +71,7 @@ The next step is to use ```Join_discreteData_v3.R``` to add the calculated varia
 
 Once a set of CTD data has been processed, you don't need to redo the MATLAB steps unless the data gets reprocessed by BATS.
 
-## Step 4: Merge in discrete dataset as it becomes available (in R)
+## Step 5: Merge in discrete dataset as it becomes available (in R)
 You will always have the calculated variables from Ruth's code, and there will be other datases as they become available (e.g., nutrients, Shimadzu data, cell counts, and more). One important note: the merge is done based on **New_ID**, so the new datafile must have a column with the new ID (begins in 1,2, or 9). There is an example file in the data_holdingZone folder (```sampleDataFile_useAsExampleForYourData.xlsx```) so you can see the format needed for an Excel file holding new data. New data can be in an Excel file or a CSV file. 
 
 Krista updated Shuting's code (new available [Join_discreteData_v3.R](https://github.com/BIOS-SCOPE/data_pipeline/blob/main/R_code/Join_discreteData_v3.R)). Generally the new script does the following:
