@@ -1,5 +1,5 @@
 # data_pipeline 
-Updated 5 August 2026; Krista Longnecker 
+Updated 24 August 2026; Krista Longnecker 
 
 This data_pipeline is also available at Zenodo at this DOI:
 <img width="191" height="20" alt="image" src="https://github.com/user-attachments/assets/b37fbb40-e86b-4c72-9fe6-6655a58b311b" />
@@ -20,13 +20,13 @@ Details on the scripts are covered either in the PDF presented [here](https://gi
 ```./BIOS-SCOPE Cruises  (these begin with “9”)```
 
 ## Step 1: Download CTD files from BIOS-SCOPE Google drive
-To work on the CTD data, get the data from the BIOS-SCOPE Google Drive. This is best done in batches, where each 'batch' is CTD data from multiple cruises, possibly over multiple years. You will need to process data from BATS cruises separately from BIOSSCOPE cruises.
+To work on the CTD data, get the data from the BIOS-SCOPE Google Drive (for BIOS-SCOPE cruises) or from BCO-DMO (for BATS cruises). This is best done in batches, where each 'batch' is CTD data from multiple cruises, possibly over multiple years. You will need to process data from BATS cruises separately from BIOSSCOPE cruises.
  
 On Google Drive you will find subfolders for each cruise. Each subfolder contains various ascii files (one per each CTD cast, plus the physf_QC and MLD.dat files). Go into the CTDrelease_yyyymmdd folder and highlight the cruise folders that are new --> download them to a zip file.\
 Make a processing folder (e.g., BIOSSCOPE_working) and move the downloaded zip archives there. Unzip the files. 
 
 ## Step 2: Shuting's pipeline (in R)
-This file was last updated by Krista (June 2026), the lastest update allowed us to use BATS data from BCO-DMO. The code will require you to indicate if you are working on 'BATS' data or 'BIOSSCOPE' data (at line 30). The updated R file is [Join_BATS_All_with_master_v4.R](https://github.com/BIOS-SCOPE/data_pipeline/blob/main/R_code/Join_BATS_All_with_master_v4.R), and you can click the link to see the file on GitHub. 
+This file was last updated by Krista (June 2026), the lastest update allowed us to use BATS data from BCO-DMO. The code will require you to indicate if you are working on 'BATS' data or 'BIOSSCOPE' data (at line 30). The updated R file is [Join_BATS_All_with_master_v5.R](https://github.com/BIOS-SCOPE/data_pipeline/blob/main/R_code/Join_BATS_All_with_master_v5.R), and you can click the link to see the file on GitHub. 
 
 Before you dive into the R script, get the latest version of ```BATS_BS_COMBINED_MASTER_latest.xlsx``` from the BIOS-SCOPE Google Drive. Then, update the list of cruises on the CruisesAndStations tab of the worksheet.
 
@@ -51,7 +51,7 @@ Once Shuting's code has been used to add the necessary samples to the master bot
 
 Krista has updated [create_biosscope_files_2026_Krista.m ](https://github.com/BIOS-SCOPE/data_pipeline/blob/main/MATLAB_code/create_biosscope_files_2026.m ) to pick up where the previous processing script ended. The path information is set for Krista's desktop, this would need to be updated for other computers.
 
-One special note about season transition dates. There is now an Excel file ```BATS_seasons_wKLedits.2026.02.13.xlsx``` and the MATLAB code is now set to read in that file and convert it to the format used by Ruth. 
+One special note about season transition dates. There is now an Excel file ```BATS_seasons_wKLedits.2026.06.15.xlsx``` and the MATLAB code is now set to read in that file and convert it to the format used by Ruth. 
 
 Generally the rest of the code does the following:
 *	Loads CTD files from BATS, labels them with physical framework parameters
@@ -91,11 +91,6 @@ To do this and still retain the links do the following:
 * Right click on the latest file in the BIOS-SCOPE Working Google Drive
 * Scroll down to File Information, and then Manage Versions
 * Select 'upload new version' from the menu box that will come up.
-
-## Craig's need for a synoptic profile for each BATS cruise
-Craig currently working in R to make one single cast for each cruise so we can pull in data from pumps etc.
-For the data portal, using these synpotic casts, the idea is to use cast and nominal depth as the key for merging.
-Krista has Craig's code and is working on this in a separate GitHub repository (7/11/2024)
 
 ## Other notes...side uses of this repository
 #### updated June 2026
