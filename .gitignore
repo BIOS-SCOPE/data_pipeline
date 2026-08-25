@@ -4,6 +4,7 @@ CMAP/.ipynb_checkpoints/
 RawData/
 MATLAB_code/oldFiles
 R_code/oldFiles
+.git/
 
 #files
 .git
