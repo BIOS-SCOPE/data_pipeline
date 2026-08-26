@@ -2,9 +2,9 @@
 % Original code from Ruth Curry, BIOS / ASU (as create_biosscope_files.m)
 % Krista Longnecker; first updated 10 July 2024
 %
-% Some notes from Krista (25 August 2024)
+% Some notes from Krista (25 August 2026)
 % (1) you will need to update the path information and file names
-% up through row ~76 in this code. There should be no need to change
+% up through row ~77 in this code. There should be no need to change
 % anything past that point.
 % (2) You will need data from two sources: BCO-DMO and the data release
 % just for the BIOS-SCOPE project (currently available on DropBox)
@@ -12,12 +12,13 @@
 % GitHub because they are too large to put into GitHub
 % (4) This m-file will process all the CTD files into different folders,
 % setting it up that way as so much of the downstream work relies on that
-% format
+% organization
 
 % About the seasons - in June 2024 we received updated season information
 % from Ruth, this update takes advantage of the updated season information
 % from Ruth and will do so in a way that makes it easy to keep making
 % seasonal updates moving forward
+% 
 % Krista Longnecker, updated 13 February 2026 ---> new seasons
 % Krista Longnecker, updated 7 June 2026 --> using data from BCO-DMO
 % Krista Longnecker, alter 12 June 2026 - use to gather all BATS files
@@ -73,13 +74,13 @@ end
 
 do_plots = 0; %set this to 1 if you want plots - unlikely for a large number of cruises
 showOutput = 0; %set this to 1 if you want to see more details as files are processed
-warning('off','MATLAB:nearlySingularMatrix') %turn this off
-warning('off','MATLAB:singularMatrix') %turn this off
-warning('off', 'curvefit:fit:invalidStartPoint')
 
 % %%%%%%%%%%%%%%%% There should be no need to make changes below this point
 % %%%%%%%%%%%%%%%% Krista Longnecker, updated 15 June 2026
 % %%%%%%%%%%%%%%%%
+warning('off','MATLAB:nearlySingularMatrix') %turn this off
+warning('off','MATLAB:singularMatrix') %turn this off
+warning('off', 'curvefit:fit:invalidStartPoint')
 
 %% start with the data from BATS/Hydrostation S/BLOOM cruises (source:BCO-DMO)
 
