@@ -30,22 +30,21 @@ We are also still getting BIOS-SCOPE only data, which is now BIOS-SCOPE cruises 
 The pre-processing script will go through all the cruises and save the output as a file that is CRU_#####_ctd.csv. Other formats (txt and mat files) have been turned off as they are no longer necessary. The processing script organizes the data so we can use it later and calculates the derived values (season, vertical zone, sunrise/sunset, and mixed layer depths). 
 
 ## Step 3: Shuting's pipeline (in R)
-This file has been updated to allow us to use BATS data from BCO-DMO and you can do them both at once. The updated R file is [Join_BATS_All_with_master_v5.R](https://github.com/BIOS-SCOPE/data_pipeline/blob/main/R_code/Join_BATS_All_with_master_v5.R), and you can click the link to see the file on GitHub. 
+This file has been updated to allow us to use BATS data from BCO-DMO and you can do them both at once. The updated R file is [Join_BATS_All_with_master_v5.R](https://github.com/BIOS-SCOPE/data_pipeline/blob/main/R_code/Join_BATS_All_with_master_v5.R). 
 
-One key note - this will *not* go back and recalculate seasons for cruise/cast/niskins that are already in the MASTER FILE.
+:heavy_exclamation_mark: One key note - this will *not* go back and recalculate seasons for cruise/cast/niskins that are already in the MASTER FILE.
 
 Before you dive into the R script, get the latest version of ```BATS_BS_COMBINED_MASTER_latest.xlsx``` from the BIOS-SCOPE Google Drive. Then, update the list of cruises on the CruisesAndStations tab of the worksheet.
 
-Now run the R script that does the following (after data files have been downloaded from Google Drive as described above:
-* read in the current master file (```BATS_BS_COMBINED_MASTER_latest.xlsx```) and then use that to set the headers for the data incoming data
+Run the R script, which does the following:
+* read in the current master file (```BATS_BS_COMBINED_MASTER_latest.xlsx```) and use that to set the headers for the data incoming data
 * get the headers that are used on the BATS CTD data files
 * Go through one cruise at a time and
     * read in the ```_physf``` file
     * delete the columns we do not want and rename columns as needed
-    * get the cast and Niskin information from the New_ID
+    * get cruise, cast, and Niskin information from the New_ID
     * add in the nominal depths
     * resize everything so it can be pasted into the existing bottle file
-    * Pull cruise/cast/niskin for the nine-digit New_ID
 * Repeat for all cruises and open the end result as an Excel file (this will happen automatically when you run the R script)
 
 Now you have to do some manual copy/paste:
@@ -89,9 +88,6 @@ Krista expanding the repository to include code that will prepare the CTD data f
 
 #### updated February 2026
 Krista used BATSallTime repository to calculate the seasons from the BATS CTD data. The gliders were in the water less, so this was the best way to get seasonal information.
-
-#### updated July 2024
-Krista made a new repository to do the calculations on the historical BATS data (BATSallTime) because it's too confusing to do the changes needed to make the historical BATS calculations in the same place as the code needed to merge R/MATLAB for future BATS cruises.
 
 ## Using this code to prepare CTD data for BCO-DMO
 Krista created a new MATLAB script to prepare CTD data for BCO-DMO. The script is [biosscope_ctd_forBCODMO_2016to2025.m](https://github.com/BIOS-SCOPE/data_pipeline/blob/main/MATLAB_code/biosscope_ctd_forBCODMO_2016to2025.m). The end result is a CSV file that can be uploaded to BCO-DMO. The metadata for each variable is given in ```ParameterMetadata_forBCODMO.csv```, which is also available in this repository.
