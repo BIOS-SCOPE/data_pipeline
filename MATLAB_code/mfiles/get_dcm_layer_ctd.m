@@ -45,7 +45,7 @@ for ii = 1:nprof
     profdepth = max(DE(:,ii));
     if ~isnan(idcm)
         if profdepth < 100 || profdepth == DE(idcm,ii)
-            disp('Profile too shallow to evaluate DCM');
+            %disp('Profile too shallow to evaluate DCM');
             continue
         end
         

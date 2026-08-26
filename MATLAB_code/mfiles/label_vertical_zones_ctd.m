@@ -35,7 +35,7 @@ function [Zout] = label_vertical_zones_ctd(CTD,DCM,mld)
   Zout = ones(size(CTD.Depth)) .* -999;
   nz = length(Zout);
   if mld < -990
-      disp(['NO MIXED LAYER defined for  ',num2str(CTD.Cruise(1)),' - ',num2str(CTD.Cast(1))]);
+      %disp(['NO MIXED LAYER defined for  ',num2str(CTD.Cruise(1)),' - ',num2str(CTD.Cast(1))]);
       return
   end
 % 

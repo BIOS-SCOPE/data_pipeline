@@ -398,7 +398,8 @@ clear din parin
    Xout.vertZone(ibad,ii) = NaN;  
    
 % Label Seasons
-   theCode = label_seasons_ctd(XX,DCM,ML_ToUse,trans_dates);
+   %theCode = label_seasons_ctd(XX,DCM,ML_ToUse,trans_dates); 
+   theCode = label_seasons_ctd(XX,trans_dates);%update KL 8/25/2026
    disp([num2str(Xout.year(ii)),' ',num2str(Xout.month(ii)),' ',num2str(Xout.day(ii)),'  Season: ', num2str(theCode)]);
    XX.Season(:) = theCode;
    CTD.Season(indx) = theCode;

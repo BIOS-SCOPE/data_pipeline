@@ -1,5 +1,5 @@
-function Xout = create_BATS_ctd_files(TTin, trans_dates, do_plots, processedDir)
-% function Xout = create_BATS_ctd_files(TTin, trans_dates, do_plots, processedDir)
+function Xout = create_BATS_ctd_files(TTin, trans_dates, do_plots, processedDir,showOutput)
+% function Xout = create_BATS_ctd_files(TTin, trans_dates, do_plots, processedDir,showOutput)
 % Reads a  space-separated *_ctd.txt (from BATS group),
 % creates a structure with added fields, and writes a .csv file 
 % for each individual cast.  The output filenames are constructed
@@ -27,6 +27,7 @@ function Xout = create_BATS_ctd_files(TTin, trans_dates, do_plots, processedDir)
 % Most of the change is to take the new data format and make it match
 % Ruth's expected format. I also now set MAXZ based on the data as opposed
 % to preset depth of 2500m
+% 25 August 2026, Krista, add showOutput to make this a little quieter 
 
 %%  Read file into rectangular array, and store each column as a field in structure CTD
 % fid = fopen(infile,'r');
@@ -231,7 +232,9 @@ for ii = 1:ncast
        if max(ibad) < 5
            Xout.sa(ibad,ii) = Xout.sa(max(ibad)+1,ii);
            CTD.Salt(indx)= Xout.sa(1:nz,ii);
-           disp('Replaced missing salts at top of cast')
+           if showOutput
+               disp('Replaced missing salts at top of cast')
+           end
        end
    end
     % compute derived variables
@@ -302,8 +305,10 @@ if do_plots
          plot(Xfilt,XX.Pressure,'-k','Linewidth',1.5);
 end
      if abs(bias) > 0.005
-       disp('Applying bias to fluor profile')
-       Xfilt = Xfilt - bias;
+         if showOutput
+           disp('Applying bias to fluor profile')
+         end
+         Xfilt = Xfilt - bias;
 if do_plots
     plot(Xfilt,XX.Pressure,'-r','Linewidth',1.5);
 end
@@ -339,7 +344,9 @@ if do_plots
     plot(xlim(),[ML_ToUse,ML_ToUse],'--m','Linewidth',1)
 end
 if isnan(DCM.itop)
+    if showOutput
        disp('top of DCM within ML')
+    end
 end
     
     clear filt_width  Xfilt izmax 
@@ -402,7 +409,9 @@ clear din parin
 % Label Seasons
    %theCode = label_seasons_ctd(XX,DCM,ML_ToUse,trans_dates);
    theCode = label_seasons_ctd(XX,trans_dates); %update KL 6/12/2026
-   disp([num2str(Xout.year(ii)),' ',num2str(Xout.month(ii)),' ',num2str(Xout.day(ii)),'  Season: ', num2str(theCode)]);
+   if showOutput
+       disp([num2str(Xout.year(ii)),' ',num2str(Xout.month(ii)),' ',num2str(Xout.day(ii)),'  Season: ', num2str(theCode)]);
+   end
    XX.Season(:) = theCode;
    CTD.Season(indx) = theCode;
    Xout.Season(ii) = theCode;

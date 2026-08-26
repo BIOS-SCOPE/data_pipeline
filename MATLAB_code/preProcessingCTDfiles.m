@@ -28,12 +28,12 @@
 %%add options depending on computer, KL is jumping between computers
 if isequal(getenv('COMPUTERNAME'),'CORTADO')
     % add mfiles into MATLAB path
-    addpath(genpath('C:\DropBox\GitHub_cortado\BATSallTime\MATLAB_code\mfiles'));    
+    addpath(genpath('C:\DropBox\GitHub_cortado\data_pipeline\MATLAB_code\mfiles'));    
     % set the root working directory
     rootdir = 'C:\DropBox\GitHub_cortado\data_pipeline\';    
 elseif isequal(getenv('COMPUTERNAME'),'DESKTOP-QB9J1SQ')
     % same idea as above, different computer 
-    addpath(genpath('D:\DropBox\GitHub_niskin\BATSallTime\MATLAB_code\mfiles'));    
+    addpath(genpath('D:\DropBox\GitHub_niskin\data_pipeline\MATLAB_code\mfiles'));    
     rootdir = 'D:\DropBox\GitHub_niskin\data_pipeline\';
 end
 
@@ -72,6 +72,8 @@ elseif 0
 end
 
 do_plots = 0; %set this to 1 if you want plots - unlikely for a large number of cruises
+showOutput = 0; %set this to 1 if you want to see more details as files are processed
+warning('off','MATLAB:nearlySingularMatrix') %turn this off
 
 % %%%%%%%%%%%%%%%% There should be no need to make changes below this point
 % %%%%%%%%%%%%%%%% Krista Longnecker, updated 15 June 2026
@@ -89,7 +91,7 @@ for ii = 1:length(uniqueCruises)
    %find the rows for one cruise
    k = find(C.Cruise_num == uniqueCruises(ii)); 
    oneCruise = C(k,:);
-   CTD = create_BATS_ctd_files(oneCruise,season_dates,do_plots,CTDprocessedDir); %update KL 6/12/2026
+   CTD = create_BATS_ctd_files(oneCruise,season_dates,do_plots,CTDprocessedDir,showOutput); %update KL 8/25/2026
 
    cd(CTDprocessedDir)
    fmt = '%4d%02d%02d_%1d%04d_CTD.mat';
@@ -99,6 +101,7 @@ for ii = 1:length(uniqueCruises)
    clear k oneCruise CTD fmt outfile
 end
 clear ii
+clear C %done with BCO-DMO file
 
 %% Move on to the BIOS-SCOPE data release
 % Filter so we only process files from cruises that we do NOT already have
@@ -106,6 +109,9 @@ clear ii
 % Start by getting the list of folders  - this will be both BIOS-SCOPE cruises
 % and cruises where BIOS-SCOPE sampling was done
 cd(BIOSSCOPEdatadir);
+%first tidy up and make sure there are no existing *txt files
+delete('*.txt')
+
 %this will get *all* the directories, some of which will be duplicates
 dirAll = dir(BIOSSCOPEdatadir);
 toIgnore = strcmp({dirAll.name}, '.') | strcmp({dirAll.name}, '..');
@@ -113,8 +119,8 @@ dirAll = dirAll(~toIgnore); %remove . and .. as MATLAB is not smart enough to sk
 clear toIgnore
 
 %match to existing work based on folder names
-isFolder = [ac.isdir];
-foldersOnly = ac(isFolder);
+isFolder = [dirAll.isdir];
+foldersOnly = dirAll(isFolder);
 dirName = {foldersOnly.name}; 
 
 %only work on the new folders, use setdiff to find that subset
@@ -122,6 +128,7 @@ dirName = {foldersOnly.name};
 
 dirlist = dirAll(ia);
 clear c ia isFolder foldersOnly dirName
+
 %now iterate through each of the new cruise folders
 for a = 1 : length(dirlist)
   thisdir = dirlist(a).name;
@@ -160,9 +167,7 @@ for ii = 1:nfiles
    mkdir(newdir);
    cd(newdir);
 
-   do_plots = 0;
    CTD = create_BIOSSCOPE_ctd_files_v2(infile,season_dates,do_plots,showOutput);
-   %CTD = create_BATS_ctd_files(oneCruise,season_dates,do_plots,CTDprocessedDir); %update KL 6/12/2026
    movefile('CRU*',CTDprocessedDir);
 
    cd(CTDprocessedDir)
@@ -174,18 +179,8 @@ for ii = 1:nfiles
 end
 
 
-
-
-
-
-
-
-
-
-
-
 %  Check fluor profiles for bad data   (None!) 
-cd(BCODMOdatadir)
+cd(CTDprocessedDir)
 dirName = dir('*_CTD.mat');
 icru_bad =[];
 
@@ -196,7 +191,7 @@ for ii=1:length(dirName)
      for iprof = 1:length(CTD.cast)
         if any(find(CTD.fluor_filt(:,iprof) > 1 | CTD.fluor_filt(:,iprof) < -0.05))
             icru_bad = [icru_bad; CTD.BATS_id(iprof) ];
-            disp([num2str(CTD.BATS_id(iprof)),' cast # ',num2str(CTD.cast(iprof))])
+            disp(['Bad fluor data: ',num2str(CTD.BATS_id(iprof)),' cast # ',num2str(CTD.cast(iprof))])
         end
      end
 end
