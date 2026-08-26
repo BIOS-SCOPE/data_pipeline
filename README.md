@@ -30,7 +30,9 @@ We are also still getting BIOS-SCOPE only data, which is now BIOS-SCOPE cruises 
 The pre-processing script will go through all the cruises and save the output as a file that is CRU_#####_ctd.csv. Other formats (txt and mat files) have been turned off as they are no longer necessary. The processing script organizes the data so we can use it later and calculates the derived values (season, vertical zone, sunrise/sunset, and mixed layer depths). 
 
 ## Step 3: Shuting's pipeline (in R)
-This file has been updated to allow us to use BATS data from BCO-DMO. The code will require you to indicate if you are working on 'BATS' data or 'BIOSSCOPE' data (at line 30). The updated R file is [Join_BATS_All_with_master_v5.R](https://github.com/BIOS-SCOPE/data_pipeline/blob/main/R_code/Join_BATS_All_with_master_v5.R), and you can click the link to see the file on GitHub. 
+This file has been updated to allow us to use BATS data from BCO-DMO and you can do them both at once. The updated R file is [Join_BATS_All_with_master_v5.R](https://github.com/BIOS-SCOPE/data_pipeline/blob/main/R_code/Join_BATS_All_with_master_v5.R), and you can click the link to see the file on GitHub. 
+
+One key note - this will *not* go back and recalculate seasons for cruise/cast/niskins that are already in the MASTER FILE.
 
 Before you dive into the R script, get the latest version of ```BATS_BS_COMBINED_MASTER_latest.xlsx``` from the BIOS-SCOPE Google Drive. Then, update the list of cruises on the CruisesAndStations tab of the worksheet.
 
@@ -38,11 +40,12 @@ Now run the R script that does the following (after data files have been downloa
 * read in the current master file (```BATS_BS_COMBINED_MASTER_latest.xlsx```) and then use that to set the headers for the data incoming data
 * get the headers that are used on the BATS CTD data files
 * Go through one cruise at a time and
-    * read in the ```BIOSSCOPE_physf``` file
+    * read in the ```_physf``` file
     * delete the columns we do not want and rename columns as needed
     * get the cast and Niskin information from the New_ID
     * add in the nominal depths
     * resize everything so it can be pasted into the existing bottle file
+    * Pull cruise/cast/niskin for the nine-digit New_ID
 * Repeat for all cruises and open the end result as an Excel file (this will happen automatically when you run the R script)
 
 Now you have to do some manual copy/paste:
@@ -50,27 +53,7 @@ Now you have to do some manual copy/paste:
 * Update the log in the master file
 * Save the file with a new date
 
-## Step 4: Ruth Curry's pipeline (in MATLAB)
-Once Shuting's code has been used to add the necessary samples to the master bottle file, then you can run Ruth's code to calculate the derived variables. 
-
-Krista has updated [create_biosscope_files_2026_Krista.m ](https://github.com/BIOS-SCOPE/data_pipeline/blob/main/MATLAB_code/create_biosscope_files_2026.m ) to pick up where the previous processing script ended. The path information is set for Krista's desktop, this would need to be updated for other computers.
-
-One special note about season transition dates. There is now an Excel file ```BATS_seasons_wKLedits.2026.06.15.xlsx``` and the MATLAB code is now set to read in that file and convert it to the format used by Ruth. 
-
-Generally the rest of the code does the following:
-*	Loads CTD files from BATS, labels them with physical framework parameters
-*	Outputs CSV and MAT files
-*	Reads Master bottle file, creates structure with added fields
-*	Loops through bottle data cruise by cruise, matches the corresponding CTD cast, computes a set derived physical properties and adds the values to the bottle cast
-*	The end result is a file that is called ```ADD_to_MASTER_temporary.csv``` which is saved to a holding zone
-
-Then (this is awkward, but on the list to change), copy the new derived variables into the bottle file (sunrise, sunset, MLD calculations, vertical zone, and seasons).
- 
-The next step is to use ```Join_discreteData_v3.R``` to add the calculated variables to the existing bottle file.
-
-Once a set of CTD data has been processed, you don't need to redo the MATLAB steps unless the data gets reprocessed by BATS.
-
-## Step 5: Merge in discrete dataset as it becomes available (in R)
+## Step 4: Merge in discrete dataset as it becomes available (in R)
 You will always have the calculated variables from Ruth's code, and there will be other datases as they become available (e.g., nutrients, Shimadzu data, cell counts, and more). One important note: the merge is done based on **New_ID**, so the new datafile must have a column with the new ID (begins in 1,2, or 9). There is an example file in the data_holdingZone folder (```sampleDataFile_useAsExampleForYourData.xlsx```) so you can see the format needed for an Excel file holding new data. New data can be in an Excel file or a CSV file. 
 
 Krista updated Shuting's code (new available [Join_discreteData_v3.R](https://github.com/BIOS-SCOPE/data_pipeline/blob/main/R_code/Join_discreteData_v3.R)). Generally the new script does the following:
