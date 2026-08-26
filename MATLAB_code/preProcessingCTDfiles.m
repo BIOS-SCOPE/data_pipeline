@@ -74,6 +74,8 @@ end
 do_plots = 0; %set this to 1 if you want plots - unlikely for a large number of cruises
 showOutput = 0; %set this to 1 if you want to see more details as files are processed
 warning('off','MATLAB:nearlySingularMatrix') %turn this off
+warning('off','MATLAB:singularMatrix') %turn this off
+warning('off', 'curvefit:fit:invalidStartPoint')
 
 % %%%%%%%%%%%%%%%% There should be no need to make changes below this point
 % %%%%%%%%%%%%%%%% Krista Longnecker, updated 15 June 2026
@@ -87,18 +89,23 @@ C = readtable(BCODMOdata);
 % how many unique cruises are there? Will go through each cruise one at a time
 uniqueCruises = unique(C.Cruise_num);
 
-for ii = 1:length(uniqueCruises)    
+% for ii = 1:length(uniqueCruises)    
+for ii = 3
    %find the rows for one cruise
    k = find(C.Cruise_num == uniqueCruises(ii)); 
    oneCruise = C(k,:);
    CTD = create_BATS_ctd_files(oneCruise,season_dates,do_plots,CTDprocessedDir,showOutput); %update KL 8/25/2026
 
-   cd(CTDprocessedDir)
-   fmt = '%4d%02d%02d_%1d%04d_CTD.mat';
-   outfile = sprintf(fmt,CTD.year(1),CTD.month(1),CTD.day(1),CTD.type(1),CTD.cruise(1));
-   disp(['Writing ',outfile]);
-   save(outfile,'CTD');
-   clear k oneCruise CTD fmt outfile
+   if 0 %for now, turn off *mat files, cannot read those into R (which is the next step)
+       cd(CTDprocessedDir)
+       fmt = '%4d%02d%02d_%1d%04d_CTD.mat';
+       outfile = sprintf(fmt,CTD.year(1),CTD.month(1),CTD.day(1),CTD.type(1),CTD.cruise(1));
+       disp(['Writing ',outfile]);
+       save(outfile,'CTD');
+       clear fmt outfile
+   end
+
+   clear k oneCruise CTD 
 end
 clear ii
 clear C %done with BCO-DMO file
@@ -158,7 +165,6 @@ cd(BIOSSCOPEdatadir);
 dirlist = dir('*_ctd.txt');
 new_cruises = cat(1,dirlist.name); %KL adding 1/4/2024
 
-% MAXZ = 2500;  % row dimension for CTD profiles; changing to finding this 
 nfiles = length(dirlist);
 for ii = 1:nfiles
    fname = dirlist(ii).name;
@@ -167,16 +173,24 @@ for ii = 1:nfiles
    mkdir(newdir);
    cd(newdir);
 
-   CTD = create_BIOSSCOPE_ctd_files_v2(infile,season_dates,do_plots,showOutput);
-   movefile('CRU*',CTDprocessedDir);
+   %really is easier to have a separate files for BIOS-SCOPE files as there
+   %are some formatting differences
+   CTD = create_BIOSSCOPE_ctd_files_v2(infile,season_dates,do_plots,CTDprocessedDir,showOutput);
+   %movefile('CRU*',CTDprocessedDir);
 
-   cd(CTDprocessedDir)
-   fmt = '%4d%02d%02d_%1d%04d_CTD.mat';
-   outfile = sprintf(fmt,CTD.year(1),CTD.month(1),CTD.day(1),CTD.type(1),CTD.cruise(1));
-   disp(['Writing ',outfile]);
-   save(outfile,'CTD');
-   clear fname infile newdir CTD fmt outfile
+   if 0 %for now, turn off *mat files, cannot read those into R (which is the next step)
+       cd(CTDprocessedDir)
+       fmt = '%4d%02d%02d_%1d%04d_CTD.mat';
+       outfile = sprintf(fmt,CTD.year(1),CTD.month(1),CTD.day(1),CTD.type(1),CTD.cruise(1));
+       disp(['Writing ',outfile]);
+       save(outfile,'CTD');
+       clear fmt outfile
+   end
+   
+   clear fname infile newdir CTD
+
 end
+
 
 
 %  Check fluor profiles for bad data   (None!) 

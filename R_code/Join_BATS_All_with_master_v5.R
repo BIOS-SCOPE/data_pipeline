@@ -270,6 +270,26 @@ for (a in 1:length(D)) {
     
   }
   
+  # use the cruise ID (five digit version to go find the MATLAB file with the calculated variables)
+  processedDir <- paste0(gDir,'RawData/processedCTDdata/')
+  oneCruise <- substr(new$New_ID,1,5)[1]
+  
+  mData <- read.csv(paste0(processedDir,'CRU_',oneCruise,'_ctd.csv'))
+  
+  #need one row for each CAST (will have same values by cast), note the CRU file does not have Niskin so I cannot merge on New_ID
+  mData <- mData %>%
+    group_by(Cruise,Cast) %>%
+    slice(1) %>%
+    ungroup() %>%
+    select("Cruise","Cast","Sunrise","Sunset","MLD_dens125","MLD_bvfrq","MLD_densT2","DCM","VertZone","Season") %>%
+    mutate(Cast = as.character(Cast))
+ 
+  #add the new columns to new... 
+  new <- new %>%
+    left_join(mData,by='Cast') %>%
+    select(-Cruise)
+  
+  
   #add Nominal_Depth, depend on each cruise, this range may need to change, check cast sheets
   #set up a column of -990 first (have some depths that are not in Shuting's preset list below)
   Nominal_Depth <- rep(-999,1,nrow(new))

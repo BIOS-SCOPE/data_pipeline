@@ -1,5 +1,5 @@
-function Xout = create_BIOSSCOPE_ctd_files(infile, trans_dates, do_plots, showOutput)
-% function Xout = create_BIOSSCOPE_ctd_files(infile, trans_dates, do_plots, showOutput)
+function Xout = create_BIOSSCOPE_ctd_files(infile, trans_dates, do_plots, processedDir, showOutput)
+% function Xout = create_BIOSSCOPE_ctd_files(infile, trans_dates, do_plots, processedDir, showOutput)
 % Reads a  space-separated *_ctd.txt (from BATS group),
 % creates a structure with added fields, and writes a .csv file 
 % for each individual cast.  The output filenames are constructed
@@ -416,14 +416,14 @@ clear din parin
         XX.(fname) = BB;       
     end
 
-% Output the cast
+% Output the cast (August 2026 - turn off, do not need per-cast files)
    fmt = '%8d_%1d%04d_%03d_ctd.csv';
    outfile = sprintf(fmt,XX.yyyymmdd(1),Xout.type(ii),XX.Cruise(1),XX.Cast(1));
    if showOutput
        disp(['Writing ',outfile]);
    end
    TTcast = struct2table(XX);
-   writetable(TTcast,outfile);
+   %writetable(TTcast,fullfile(processedDir,outfile)); try OFF 8/25/2026
   
   clear XX DCM MLD TTcast
   
@@ -431,10 +431,8 @@ end % for ii
 
    fmt = 'CRU_%1d%04d_ctd.csv';
    outfile = sprintf(fmt,Xout.type(1),CTD.Cruise(1));
-   if showOutput
-       disp(['Writing ',outfile]);
-   end
-
+   disp(['Writing ',outfile]); %show this - my only marker of where I am 
+   
    % replace any NaNs in CTD struct with -999.
    flist = fieldnames(CTD);
    nfields = length(flist);
@@ -444,12 +442,13 @@ end % for ii
        CTD.(fname) = CC;
    end
    TTcruise = struct2table(CTD);
-   writetable(TTcruise,outfile);
+   writetable(TTcruise,fullfile(processedDir,outfile)); %leave on, one file per cruise is useful
+
     if do_plots
         reply = input(' HIT any key to close figures....');
         close all
     end
-%
+
 %disp('Done!');
 end %function
 

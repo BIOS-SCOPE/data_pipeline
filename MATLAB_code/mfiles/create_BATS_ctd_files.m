@@ -424,12 +424,12 @@ clear din parin
         XX.(fname) = BB;       
     end
 
-% Output the cast
+% Output the cast (August 2026: do not need per-cast files...too many)
    fmt = '%8d_%1d%04d_%03d_ctd.csv';
    outfile = sprintf(fmt,XX.yyyymmdd(1),Xout.type(ii),XX.Cruise(1),XX.Cast(1));
    %disp(['Writing ',outfile]);
    TTcast = struct2table(XX);
-   writetable(TTcast,fullfile(processedDir,outfile));
+   %writetable(TTcast,fullfile(processedDir,outfile)); leave OFF 8/25/2026,
   
   clear XX DCM MLD TTcast
   
@@ -437,7 +437,7 @@ end % for ii
 
    fmt = 'CRU_%1d%04d_ctd.csv';
    outfile = sprintf(fmt,Xout.type(1),CTD.Cruise(1));
-   %disp(['Writing ',outfile]);
+   disp(['Writing ',outfile]); %show this - only marker of where I am 
    
    % replace any NaNs in CTD struct with -999.
    flist = fieldnames(CTD);
@@ -449,8 +449,7 @@ end % for ii
    end
    TTcruise = struct2table(CTD);
    %writetable(TTcruise,outfile);
-   writetable(TTcruise,fullfile(processedDir,outfile)) %change to this KL 6/12/2026
-   
+   writetable(TTcruise,fullfile(processedDir,outfile)) % update 8/26/2026; leave this on - has what I need to read into R script
     if do_plots
         reply = input(' HIT any key to close figures....');
         close all
