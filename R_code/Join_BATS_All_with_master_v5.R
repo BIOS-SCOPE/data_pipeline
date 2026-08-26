@@ -12,7 +12,7 @@
 # Some notes from Krista: 
 # (1) Make sure the list of cruisesAndStations is updated in the bottle file 
 # before running this code
-# (2) you will need to update the path information and file names up through row ~40 in this code. 
+# (2) you will need to update the path information and file names up through row ~60 in this code. 
 # There should be no need to change anything past that point.
 # (3) This script will open a single worksheet in Excel - the rows there need to be
 # appended to the end of the existing bottle file; you should also update the log in the bottle
@@ -32,18 +32,17 @@ if (OS == "unix"){
   # MAC file path
   dPath <- "/users/klongnecker/" 
 } else if (OS == "windows"){
+
   # windows file path
   dPath <- "D:/Dropbox/GitHub_niskin/data_pipeline/RawData/"
+
 } else {
   #something went wrong...could not determine the operating system
   print("ERROR: OS could not be identified")
 }
 
 #read in the existing discrete file so that you know what you are matching the columns to
-#read in the master file - which is currently an Excel file
-#fName <- "BATS_BS_COMBINED_MASTER_latest.xlsx"
 fName <- "BATS_BS_COMBINED_MASTER_latest.xlsx"
-
 
 sheetName <- 'DATA' #updated to a simple name as Krista keeps typing this wrong! was: BATS_BS bottle file
 
@@ -52,14 +51,10 @@ sheetName <- 'DATA' #updated to a simple name as Krista keeps typing this wrong!
 gDir <- "D:/Dropbox/GitHub_niskin/data_pipeline/"
 headers <- read.csv(paste0(gDir,"CTD_headerInformation.csv"),sep=",", fileEncoding="UTF-8-BOM", header=F)
 
-cruiseType <- 'BATS' #either BIOSSCOPE or BATS #change as needed
+# cruiseType <- 'BATS' #either BIOSSCOPE or BATS #set below based on Bottle_ID
 
 # where is the working directory with the new CTD data (this folder is NOT synced to GitHub)
 newDir <- "D:/Dropbox/GitHub_niskin/data_pipeline/RawData/CTDrelease_20260326"
-#newDir <- "D:/Dropbox/GitHub_niskin/data_pipeline/RawData/testing"
-
-
-
 
 
 
@@ -90,16 +85,18 @@ discrete_match <- discrete_match[-1,]
 # now, need the new CTD data, it's easiest to change to the working directory (variable defined above)
 setwd(newDir)
 
-
-#different code for BATS vs. BIOSSCOPE cruise
-if (cruiseType=='BATS'){
-  ##BATS makes a physf file for the BIOSSCOPE project
-  #get the list of folders - will go into each folder one at a time and concatenate the results
-  D <- dir(pattern = "*BIOSSCOPE_physf*",recursive=T)
-} else if (cruiseType=='BIOSSCOPE') {
-  D <- dir(pattern = "*_physf*",recursive=T)
-}
-
+# #different code for BATS vs. BIOSSCOPE cruise
+# if (cruiseType=='BATS'){
+#   ##BATS makes a physf file for the BIOSSCOPE project
+#   #get the list of folders - will go into each folder one at a time and concatenate the results
+#   D <- dir(pattern = "*BIOSSCOPE_physf*",recursive=T)
+# } else if (cruiseType=='BIOSSCOPE') {
+#   D <- dir(pattern = "*_physf*",recursive=T)
+# }
+# at this point working in CTDrelease_yyyymmdd, so combination of BATS and BIOS-SCOPE data, can use:
+D <- dir(pattern = "*_physf_QC.dat",recursive=T)
+# remove one file that will be outside the folders:
+D <- D[D != "BIOSSCOPE_master_physf_QC.dat"]
 
 #now make this a loop - go through one folder of CTD data at a time
 for (a in 1:length(D)) {
@@ -122,8 +119,6 @@ for (a in 1:length(D)) {
   else {
       print(paste0("Working on this cruise/cast/niskin: ",check))
     }
-
-  rm(check)
 
 
   #Delete columns to match same columns on BIOSSCOPE Master bottlefile, we use _in data
@@ -201,11 +196,20 @@ for (a in 1:length(D)) {
   
   rm(idx)
   
+
+  # if the cruise begins with a 9, this is a BIOS-SCOPE cruise, use that to set cruiseType
+  if (substr(check,1,1) == "9"){
+    cruiseType <- 'BIOSSCOPE'
+  } else  {
+    cruiseType <- 'BATS'
+  } 
+
   #add new columns, will be the same variable multiple times
   new$Program<-rep(cruiseType, nrow(new))  #change to "BATS" if merging new BATS cruises
   
   ##this next bit makes New_ID which will be needed in the discrete data file...
   ## again, different code for BIOSSCOPE cruise vs. BATS cruise
+  
   if (cruiseType=='BIOSSCOPE') { 
     #Shuting's syntax for a BIOS-SCOPE cruise
     new$Cruise_ID<-paste("AE",substr(new$New_ID,2,5),sep="")
@@ -272,7 +276,7 @@ for (a in 1:length(D)) {
   
   # use the cruise ID (five digit version to go find the MATLAB file with the calculated variables)
   processedDir <- paste0(gDir,'RawData/processedCTDdata/')
-  oneCruise <- substr(new$New_ID,1,5)[1]
+  oneCruise <- substr(check,1,5)
   
   mData <- read.csv(paste0(processedDir,'CRU_',oneCruise,'_ctd.csv'))
   
@@ -405,31 +409,5 @@ wb$add_data("dataToAdd",discrete_match)
 #this next line will open up the file in Excel. Sadly you will still have to copy
 #and paste into a new sheet, but at least you can copy the whole sheet
 xl_open(wb)
-
-
-
-
-# #####Below check duplicate is for some old data note, ignore this section if for new data now
-# #if you are merging old BATS data, there are some duplicate rows
-# BATS<-read.csv("Copy of bats_bottle.csv",header=T)
-# BATS_part<-BATS[BATS$decy.....>=2016.1851,]
-# #common column name for merge
-# colnames(BATS_part)[1]<-"ID"
-# #make sure class between two data frames are same before merging
-# class(BATS_part[,1])
-# BATS_part[,1]<-as.character(BATS_part[,1])
-# #there are duplicate rows in BATS_part which will add rows to master if left_join
-# class(master[,1])
-# colnames(BATS_part)
-# duplicate<-BATS_part[duplicated(BATS_part[,c(1:2)]),]
-# #check with master, keep the first four rows in duplicate dataframe, and fifth,sixth row in original dataframe
-# BATS_part_nodup<-BATS_part[-c(49478-48803,50153-48803,50155-48803,50164-48803,50839-48803,51026-48803),]#row name is from BATS dataframe
-# #########################################
-
-
-
-
-
-
 
 

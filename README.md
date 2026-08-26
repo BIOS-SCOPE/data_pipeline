@@ -13,24 +13,24 @@ Details on the scripts are covered either in the PDF presented [here](https://gi
 
 ## After a cruise 
 * The CTD data goes to Craig Carlson to serve as an archive; no work is done on these files.
-* The BATS team processes the CTD data. For the BATS cruises, use the data at BCO-DMO, which is updated at BCO-DMO every six months. For the BIOS-SCOPE cruises, files are transferred to us separately. As of spring 2026, Craig, Rachel, and Krista have access to the processed data on BIOS-SCOPE.
-* Rachel (or Krista) moves the processed CTD data onto the BIOS-SCOPE Google Drive. Data will be here in the BIOS-SCOPE Google Drive:\
-```./1.0 DATA/1.0 ORIG CTD FROM BATS```\
-```./CTDrelease_20260326  (these begin with “1” or “2”)```\
-```./BIOS-SCOPE Cruises  (these begin with “9”)```
+* The BATS team processes the CTD data. For the BATS cruises, use the data at BCO-DMO, which is updated at BCO-DMO every six months. For the BIOS-SCOPE cruises, files are transferred to us separately. As of spring 2026, Craig, Rachel, and Krista have access to the processed data for BIOS-SCOPE.
+* Rachel (or Krista) moves the processed CTD data onto the BIOS-SCOPE Google Drive. The data specific to BIOS-SCOPE will be here in the BIOS-SCOPE Google Drive:\
+```./1.0 DATA/1.0 ORIG CTD FROM BATS/CTDrelease_20260326```\
+
+The BCO-DMO website for the BATS cruises, and Hydrostation S cruises, and the BLOOM cruises is [here](https://www.bco-dmo.org/project/2124), from there you want the two decibar averaged CTD profiles collected at the BATS site. This is updated every six months.
 
 ## Step 1: Download CTD data from BCO-DMO and/or BIOS-SCOPE specific location
-To work on the CTD data, get the data from the BIOS-SCOPE Google Drive (for BIOS-SCOPE cruises) or from BCO-DMO (for BATS cruises). Once you have the two sets of files, you can run BATS files and the BIOS-SCOPE files in one batch.
+First, get the data from the BIOS-SCOPE Google Drive and from BCO-DMO. This is just a matter of downloadings and putting them some where that is not seen by GitHub as the files are too big for storing on GitHub.
 
 ## Step 2: Pre-processing CTD files (in MATLAB)
-With data at both BCO-DMO and coming directly to the BIOS-SCOPE project, we need a new pipeline for pre-processing the CTD files. The new file is [preProcessingCTDfiles.m ](https://github.com/BIOS-SCOPE/data_pipeline/blob/main/MATLAB_code/preProcessingCTDfiles),\
+The pipeline was updated in 2026 now that data from both BCO-DMO and coming directly to the BIOS-SCOPE project. The new file is [preProcessingCTDfiles.m ](https://github.com/BIOS-SCOPE/data_pipeline/blob/main/MATLAB_code/preProcessingCTDfiles).\
 The data at BCO-DMO includes any BATS cruises, Hydrostation S cruises, and the BLOOM cruises. As these go back to the beginning of BATS sampling, this will be more than we generally need.\
 We are also still getting BIOS-SCOPE only data, which is now BIOS-SCOPE cruises and anytime a BIOS-SCOPE sample is collected (on a BATS, HS, or BLOOM cruise). This overlaps a little with the data from BCO-DMO. Hence, at this step, process all the files, but then will have to trim things down as it will be to large if we have all possible cruise/cast/niskin information.
 
-Practically, the pre-processing script will go through all the cruises and save the output as a file that is CRU_#####_ctd.csv. All other formats (txt and mat files) have been turned off as they are no longer necessary. The processing script organizes the data so we can use it later and calculates the derived values (season, vertical zone, sunrise/sunset, and mixed layer depths). 
+The pre-processing script will go through all the cruises and save the output as a file that is CRU_#####_ctd.csv. Other formats (txt and mat files) have been turned off as they are no longer necessary. The processing script organizes the data so we can use it later and calculates the derived values (season, vertical zone, sunrise/sunset, and mixed layer depths). 
 
 ## Step 3: Shuting's pipeline (in R)
-This file was last updated by Krista (June 2026), the lastest update allowed us to use BATS data from BCO-DMO. The code will require you to indicate if you are working on 'BATS' data or 'BIOSSCOPE' data (at line 30). The updated R file is [Join_BATS_All_with_master_v5.R](https://github.com/BIOS-SCOPE/data_pipeline/blob/main/R_code/Join_BATS_All_with_master_v5.R), and you can click the link to see the file on GitHub. 
+This file has been updated to allow us to use BATS data from BCO-DMO. The code will require you to indicate if you are working on 'BATS' data or 'BIOSSCOPE' data (at line 30). The updated R file is [Join_BATS_All_with_master_v5.R](https://github.com/BIOS-SCOPE/data_pipeline/blob/main/R_code/Join_BATS_All_with_master_v5.R), and you can click the link to see the file on GitHub. 
 
 Before you dive into the R script, get the latest version of ```BATS_BS_COMBINED_MASTER_latest.xlsx``` from the BIOS-SCOPE Google Drive. Then, update the list of cruises on the CruisesAndStations tab of the worksheet.
 
