@@ -82,7 +82,8 @@ To do this and still retain the links do the following:
 
 ## Other notes...side uses of this repository
 #### August 2026
-If you want a visual check of the CTD data, run this script in MATLAB, which makes the figure here.
+If you want a visual check of the CTD data, run [this script](https://github.com/BIOS-SCOPE/data_pipeline/blob/main/MATLAB_code/checkCTDdata_makeFigure.m) in MATLAB, which makes this figure.
+<img src="https://github.com/BIOS-SCOPE/data_pipeline/blob/main/MATLAB_code/visualCheckCTDdata.jpg"  width="50%" height="50%">
 
 #### updated June 2026
 * Start gathering up details on the BIOS-SCOPE samples collected by the BATS team. Using their sampling logs to generate an inventory. Use the ```BATS_sampling_all.R``` script that is in the R code folder.
