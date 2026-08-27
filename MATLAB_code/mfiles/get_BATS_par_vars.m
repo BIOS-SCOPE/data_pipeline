@@ -55,7 +55,7 @@ end
      [f, gof,options] = fit(de_good,PAR_good,'exp1','robust','bisquare');
  catch
      error('WARNING: fit() for par profile returned an error. Par variables set to NaN'); 
-     %return
+     return
  end
  
  % Compute par values

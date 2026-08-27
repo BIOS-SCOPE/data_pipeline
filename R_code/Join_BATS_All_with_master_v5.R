@@ -12,7 +12,7 @@
 # Some notes from Krista: 
 # (1) Make sure the list of cruisesAndStations is updated in the bottle file 
 # before running this code
-# (2) you will need to update the path information and file names up through row ~60 in this code. 
+# (2) you will need to update the path information and file names up through row ~62 in this code. 
 # There should be no need to change anything past that point.
 # (3) This script will open a single worksheet in Excel - the rows there need to be
 # appended to the end of the existing bottle file; you should also update the log in the bottle
@@ -51,11 +51,11 @@ sheetName <- 'DATA' #updated to a simple name as Krista keeps typing this wrong!
 gDir <- "D:/Dropbox/GitHub_niskin/data_pipeline/"
 headers <- read.csv(paste0(gDir,"CTD_headerInformation.csv"),sep=",", fileEncoding="UTF-8-BOM", header=F)
 
-# cruiseType <- 'BATS' #either BIOSSCOPE or BATS #set below based on Bottle_ID
-
 # where is the working directory with the new CTD data (this folder is NOT synced to GitHub)
 newDir <- "D:/Dropbox/GitHub_niskin/data_pipeline/RawData/CTDrelease_20260326"
 
+# this folder has the MATLAB output, which includes season,vertical zone, MLD, and sunrise/sunset
+processedDir <- paste0(gDir,'RawData/processedCTDdata/')
 
 
 
@@ -85,14 +85,6 @@ discrete_match <- discrete_match[-1,]
 # now, need the new CTD data, it's easiest to change to the working directory (variable defined above)
 setwd(newDir)
 
-# #different code for BATS vs. BIOSSCOPE cruise
-# if (cruiseType=='BATS'){
-#   ##BATS makes a physf file for the BIOSSCOPE project
-#   #get the list of folders - will go into each folder one at a time and concatenate the results
-#   D <- dir(pattern = "*BIOSSCOPE_physf*",recursive=T)
-# } else if (cruiseType=='BIOSSCOPE') {
-#   D <- dir(pattern = "*_physf*",recursive=T)
-# }
 # at this point working in CTDrelease_yyyymmdd, so combination of BATS and BIOS-SCOPE data, can use:
 D <- dir(pattern = "*_physf_QC.dat",recursive=T)
 # remove one file that will be outside the folders:
@@ -112,14 +104,13 @@ for (a in 1:length(D)) {
   #Krista note 6 June 2026
   #BATS now releases all of their data through BCO-DMO, so the data are a full release and will definitely
   #include data we already have. Instead of stopping here, change to skipping the cruises we have
-  if (!is.na(match(check,discrete$ID))){
+  if (!is.na(match(check,discrete$New_ID))){
     #stop("Something is wrong, this sample is already in discrete data file'")
     print(paste0("We already have cruise/cast/niskin: ",check))
     next }
   else {
       print(paste0("Working on this cruise/cast/niskin: ",check))
     }
-
 
   #Delete columns to match same columns on BIOSSCOPE Master bottlefile, we use _in data
   #this will remove the entire column from the information in new
@@ -275,7 +266,6 @@ for (a in 1:length(D)) {
   }
   
   # use the cruise ID (five digit version to go find the MATLAB file with the calculated variables)
-  processedDir <- paste0(gDir,'RawData/processedCTDdata/')
   oneCruise <- substr(check,1,5)
   
   mData <- read.csv(paste0(processedDir,'CRU_',oneCruise,'_ctd.csv'))

@@ -6,7 +6,7 @@
 % (1) you will need to update the path information and file names
 % up through row ~77 in this code. There should be no need to change
 % anything past that point.
-% (2) You will need data from two sources: BCO-DMO and the data release
+% (2) You will use data from two sources: BCO-DMO and the data release
 % just for the BIOS-SCOPE project (currently available on DropBox)
 % (3) Be sure to put the data folders outside the space accessible by 
 % GitHub because they are too large to put into GitHub
@@ -22,7 +22,7 @@
 % Krista Longnecker, updated 13 February 2026 ---> new seasons
 % Krista Longnecker, updated 7 June 2026 --> using data from BCO-DMO
 % Krista Longnecker, alter 12 June 2026 - use to gather all BATS files
-% AND using data from BCO-DMO...which is in an very different format 
+% AND using data from BCO-DMO...which is a very different format 
 % Krista Longnecker, 25 August 2026 move to data_pipeline as first part 
 % of pre-processing the CTD files (for BATS and BIOS-SCOPE projecct)
 
@@ -58,6 +58,7 @@ BCODMOdata = fullfile(BCODMOdatadir,'3918_v11_bats_ctd.csv');
 % overlaps with what has been submitted to BCO-DMO, but the BIOS-SCOPE-only
 % cruises are also in here
 BIOSSCOPEdatadir = fullfile(rootdir,'RawData\CTDrelease_20260326'); %KEEP name so we know which CTD release we are adding
+oldBIOSSCOPEdatadir = fullfile(rootdir,'RawData\CTDdata_olderFiles_compiled2026'); %this should not change
 
 %what are you going to use for the season information?
 if 1
@@ -68,8 +69,7 @@ if 1
     %use this function to reformat the dates, set fName in calcDerivedVariables
     season_dates = reformat_season_dates(seasonsFile) ; 
 elseif 0
-    %load in an existing file
-    %Comment this out...want to be sure that people really want to use old data
+    %Comment this out...but leave in case I want to set one season
 end
 
 do_plots = 0; %set this to 1 if you want plots - unlikely for a large number of cruises
@@ -90,8 +90,7 @@ C = readtable(BCODMOdata);
 % how many unique cruises are there? Will go through each cruise one at a time
 uniqueCruises = unique(C.Cruise_num);
 
-% for ii = 1:length(uniqueCruises)    
-for ii = 3
+for ii = 1:length(uniqueCruises)    
    %find the rows for one cruise
    k = find(C.Cruise_num == uniqueCruises(ii)); 
    oneCruise = C(k,:);
@@ -111,7 +110,7 @@ end
 clear ii
 clear C %done with BCO-DMO file
 
-%% Move on to the BIOS-SCOPE data release
+%% Move on to the BIOS-SCOPE data release: more recent files
 % Filter so we only process files from cruises that we do NOT already have
 
 % Start by getting the list of folders  - this will be both BIOS-SCOPE cruises
@@ -126,15 +125,15 @@ toIgnore = strcmp({dirAll.name}, '.') | strcmp({dirAll.name}, '..');
 dirAll = dirAll(~toIgnore); %remove . and .. as MATLAB is not smart enough to skip them
 clear toIgnore
 
-%match to existing work based on folder names
-isFolder = [dirAll.isdir];
-foldersOnly = dirAll(isFolder);
+k = find([dirAll.isdir] == 1);
+foldersOnly = dirAll(k,:);
+clear k
 dirName = {foldersOnly.name}; 
 
 %only work on the new folders, use setdiff to find that subset
 [c ia] = setdiff(str2double(dirName),uniqueCruises); %unique_cruises is double, but dirName is strings)
+dirlist = foldersOnly(ia,:);
 
-dirlist = dirAll(ia);
 clear c ia isFolder foldersOnly dirName
 
 %now iterate through each of the new cruise folders
@@ -192,9 +191,91 @@ for ii = 1:nfiles
 
 end
 
+%% Move on to the BIOS-SCOPE data release: older files
+% Filter so we only process files from cruises that we do NOT already have
+
+% Start by getting the list of folders  - this will be both BIOS-SCOPE cruises
+% and cruises where BIOS-SCOPE sampling was done
+cd(oldBIOSSCOPEdatadir);
+%first tidy up and make sure there are no existing *txt files
+delete('*.txt')
+
+%this will get *all* the directories, some of which will be duplicates
+dirAll = dir(oldBIOSSCOPEdatadir);
+toIgnore = strcmp({dirAll.name}, '.') | strcmp({dirAll.name}, '..');
+dirAll = dirAll(~toIgnore); %remove . and .. as MATLAB is not smart enough to skip them
+clear toIgnore
+
+k = find([dirAll.isdir] == 1);
+foldersOnly = dirAll(k,:); 
+clear k
+dirName = {foldersOnly.name}; 
+
+%only work on the new folders, use setdiff to find that subset
+[c ia] = setdiff(str2double(dirName),uniqueCruises); %unique_cruises is double, but dirName is strings)
+dirlist = foldersOnly(ia,:);
+
+clear c ia isFolder foldersOnly dirName
+
+%now iterate through each of the new cruise folders
+for a = 1 : length(dirlist)
+  thisdir = dirlist(a).name;
+  temp = dir(fullfile(thisdir, '*c*_QC.dat'));
+  %argh, MATLAB on Windows is ignoring case, so this is trapping all the
+  %files names *BIOSSCOPE* which we do not want
+  
+  for aa = 1:length(temp)
+      %take the *dat file (all EXCEPT the one marked BIOS-SCOPE) and make
+      %it a text file. Will put that text file (somewhere)
+      one = strcat(temp(aa).folder,filesep,temp(aa).name);
+      if ~contains(temp(aa).name,'BIOSSCOPE') %skip this file
+          fid = fopen(strcat(thisdir,'_ctd.txt'),'a');
+          riFile = fileread(one);
+          fprintf(fid,'%s',riFile);  
+          fclose(fid);
+          clear riFile fid
+      end
+      clear one
+  end
+  clear aa thisdir temp
+end
+clear a dirlist
+
+%  Now, load and label CTD data, still working in the BIOS-SCOPE data directory
+cd(oldBIOSSCOPEdatadir);
+dirlist = dir('*_ctd.txt');
+new_cruises = cat(1,dirlist.name); %KL adding 1/4/2024
+
+nfiles = length(dirlist);
+for ii = 1:nfiles
+   fname = dirlist(ii).name;
+   infile = fullfile(oldBIOSSCOPEdatadir,fname);
+   newdir = fullfile(oldBIOSSCOPEdatadir,fname(1:end-8));
+   mkdir(newdir);
+   cd(newdir);
+
+   %really is easier to have a separate files for BIOS-SCOPE files as there
+   %are some formatting differences
+   CTD = create_BIOSSCOPE_ctd_files_v2(infile,season_dates,do_plots,CTDprocessedDir,showOutput);
+   %movefile('CRU*',CTDprocessedDir);
+
+   if 0 %for now, turn off *mat files, cannot read those into R (which is the next step)
+       cd(CTDprocessedDir)
+       fmt = '%4d%02d%02d_%1d%04d_CTD.mat';
+       outfile = sprintf(fmt,CTD.year(1),CTD.month(1),CTD.day(1),CTD.type(1),CTD.cruise(1));
+       disp(['Writing ',outfile]);
+       save(outfile,'CTD');
+       clear fmt outfile
+   end
+   
+   clear fname infile newdir CTD
+
+end
 
 
-%  Check fluor profiles for bad data   (None!) 
+
+
+%% Check fluor profiles for bad data
 cd(CTDprocessedDir)
 dirName = dir('*_CTD.mat');
 icru_bad =[];
