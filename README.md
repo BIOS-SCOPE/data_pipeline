@@ -29,12 +29,12 @@ We are also still getting BIOS-SCOPE only data, which is now BIOS-SCOPE cruises 
 
 The pre-processing script will go through all the cruises and save the output as a file that is ```CRU_#####_ctd.csv```. Other formats (txt and mat files) have been turned off as they are no longer necessary. The processing script organizes the data so we can use it later and calculates the derived values (season, vertical zone, sunrise/sunset, and mixed layer depths). 
 
-:heavy_exclamation_mark::heavy_exclamation_mark: Be careful about longitude. The BCO-DMO data lists BATS as -64 while the data released to BIOS-SCOPE directly lists 64W (as a positive number).
+:heavy_exclamation_mark::heavy_exclamation_mark: Be careful about longitude. The BCO-DMO data lists BATS as -64 while the data released to BIOS-SCOPE directly list 64W (as a positive number).
 
 ## Step 3: Shuting's pipeline (in R)
 This file has been updated to allow us to use BATS data from BCO-DMO. The file has also changed so you can run BATS and BIOS-SCOPE data in one run. The updated R file is [Join_BATS_All_with_master_v5.R](https://github.com/BIOS-SCOPE/data_pipeline/blob/main/R_code/Join_BATS_All_with_master_v5.R). 
 
-:heavy_exclamation_mark: One key note - this will *not* go back and recalculate seasons for cruise/cast/niskins that are already in the MASTER FILE.
+:heavy_exclamation_mark: Note this script will *not* go back and recalculate seasons for cruise/cast/niskins that are already in the MASTER FILE. If you need to update the values in the MASTER FILE, use ```updateCalculatedVariables.R```.
 
 Before you dive into the R script, get the latest version of ```BATS_BS_COMBINED_MASTER_latest.xlsx``` from the BIOS-SCOPE Google Drive. Then, update the list of cruises on the CruisesAndStations tab of the Excel file.
 
@@ -81,8 +81,6 @@ To do this and still retain the links do the following:
 * Select 'upload new version' from the menu box that will come up.
 
 ## Other notes...side uses of this repository
-#### details August 2026
-To do one-time updates the calculated variables, use this script in R: ```updateCalculatedVariables.R```. The script will send out a spreadsheet with New_ID and the derived variables (season, vertical zone, sunrise, sunset, and MLD options), the columns have to be pasted into the Excel sheet manually. 
 
 #### updated June 2026
 * Start gathering up details on the BIOS-SCOPE samples collected by the BATS team. Using their sampling logs to generate an inventory. Use the ```BATS_sampling_all.R``` script that is in the R code folder.

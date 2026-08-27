@@ -4,7 +4,7 @@
 %
 % Some notes from Krista (25 August 2026)
 % (1) you will need to update the path information and file names
-% up through row ~77 in this code. There should be no need to change
+% up through row ~80 in this code. There should be no need to change
 % anything past that point.
 % (2) You will use data from two sources: BCO-DMO and the data release
 % just for the BIOS-SCOPE project (currently available on DropBox)
@@ -14,7 +14,8 @@
 % setting it up that way as so much of the downstream work relies on that
 % organization
 % (5) Be careful with longitude: the BCO-DMO data has BATS at -64, while
-% the BIOS-SCOPE datasets we receive directly have +64 W 
+% the BIOS-SCOPE datasets we receive directly have +64 W. The difference in
+% sign matters in the calculations for sunrise/sunset.
 
 % About the seasons - in June 2024 we received updated season information
 % from Ruth, this update takes advantage of the updated season information
@@ -35,7 +36,6 @@ if isequal(getenv('COMPUTERNAME'),'CORTADO')
     % set the root working directory
     rootdir = 'C:\DropBox\GitHub_cortado\data_pipeline\';    
 elseif isequal(getenv('COMPUTERNAME'),'DESKTOP-QB9J1SQ')
-    % same idea as above, different computer 
     addpath(genpath('D:\DropBox\GitHub_niskin\data_pipeline\MATLAB_code\mfiles'));    
     rootdir = 'D:\DropBox\GitHub_niskin\data_pipeline\';
 end
@@ -60,7 +60,7 @@ BCODMOdata = fullfile(BCODMOdatadir,'3918_v11_bats_ctd.csv');
 % overlaps with what has been submitted to BCO-DMO, but the BIOS-SCOPE-only
 % cruises are also in here
 BIOSSCOPEdatadir = fullfile(rootdir,'RawData\CTDrelease_20260326'); %KEEP name so we know which CTD release we are adding
-oldBIOSSCOPEdatadir = fullfile(rootdir,'RawData\CTDdata_olderFiles_compiled2026'); %this should not change
+oldBIOSSCOPEdatadir = fullfile(rootdir,'RawData\CTDdata_olderFiles_compiled2026'); %this should not change, older data files had a different source
 
 %what are you going to use for the season information?
 if 1
@@ -78,12 +78,13 @@ do_plots = 0; %set this to 1 if you want plots - unlikely for a large number of 
 showOutput = 0; %set this to 1 if you want to see more details as files are processed
 
 % %%%%%%%%%%%%%%%% There should be no need to make changes below this point
-% %%%%%%%%%%%%%%%% Krista Longnecker, updated 15 June 2026
+% %%%%%%%%%%%%%%%% Krista Longnecker, updated 27 August 2026
 % %%%%%%%%%%%%%%%%
 warning('off','MATLAB:nearlySingularMatrix') %turn this off
 warning('off','MATLAB:singularMatrix') %turn this off
 warning('off', 'curvefit:fit:invalidStartPoint')
 
+%% start with the data from BATS/Hydrostation S/BLOOM cruises (source:BCO-DMO)
 %% start with the data from BATS/Hydrostation S/BLOOM cruises (source:BCO-DMO)
 
 %read in the CTD data as a table
@@ -113,6 +114,8 @@ clear ii
 clear C %done with BCO-DMO file
 
 %% Move on to the BIOS-SCOPE data release: more recent files
+%% Move on to the BIOS-SCOPE data release: more recent files
+
 % Filter so we only process files from cruises that we do NOT already have
 
 % Start by getting the list of folders  - this will be both BIOS-SCOPE cruises
@@ -175,10 +178,8 @@ for ii = 1:nfiles
    mkdir(newdir);
    cd(newdir);
 
-   %really is easier to have a separate files for BIOS-SCOPE files as there
-   %are some formatting differences
+   %really is easier to have a separate script for BIOS-SCOPE files as there are formatting differences
    CTD = create_BIOSSCOPE_ctd_files_v2(infile,season_dates,do_plots,CTDprocessedDir,showOutput);
-   %movefile('CRU*',CTDprocessedDir);
 
    if 0 %for now, turn off *mat files, cannot read those into R (which is the next step)
        cd(CTDprocessedDir)
@@ -194,13 +195,15 @@ for ii = 1:nfiles
 end
 
 %% Move on to the BIOS-SCOPE data release: older files
+%% Move on to the BIOS-SCOPE data release: older files
+
 % Filter so we only process files from cruises that we do NOT already have
 
 % Start by getting the list of folders  - this will be both BIOS-SCOPE cruises
 % and cruises where BIOS-SCOPE sampling was done
 cd(oldBIOSSCOPEdatadir);
 
-%first tidy up and make sure there are no existing *txt files
+%Find the CRU*csv files that have already been processed
 D = dir('CRU*csv');
 
 %for the old files, just need to *copy* the CRU file to the right place
