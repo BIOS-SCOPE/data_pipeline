@@ -397,7 +397,7 @@ wb$add_worksheet("dataToAdd")
 wb$add_data("dataToAdd",discrete_match)
 
 #this next line will open up the file in Excel. Sadly you will still have to copy
-#and paste into a new sheet, but at least you can copy the whole sheet
+#the rows at the end of the existing data file
 xl_open(wb)
 
 

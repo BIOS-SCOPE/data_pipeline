@@ -3,8 +3,8 @@
 # and re-enter those values. In other words, if the derived values change as a 
 # result of MATLAB reprocessing, this will be useful
 # The derived values are: 
-# ("Sunrise","Sunset","MLD_dens125","MLD_bvfrq","MLD_densT2","DCM","Season")
-# Krista Longnecker 26 August 2026
+# ("Sunrise","Sunset","MLD_dens125","MLD_bvfrq","MLD_densT2","DCM","VertZone","Season")
+# Krista Longnecker 27 August 2026
 
 rm(list =ls.str())
 
@@ -46,12 +46,12 @@ discrete_match <- discrete_match[-1,]
 discrete$cruise5 <- substr(discrete$New_ID,start=1,stop=5)
 
 #Get the unique list of cruises, will use this to load each datafile
+# updated MATLAB part to include the one HS cruise (61319); 8/27/2026
 uniqueCruises <- discrete %>%
   group_by(cruise5) %>%
   slice(1) %>%
   ungroup() %>%
-  select("cruise5") %>%
-  filter(cruise5 != '61319') #deal with that individually
+  select("cruise5")
 
 # iterate through files in the processed CTD data 
 setwd(processedDir)
@@ -72,6 +72,7 @@ for (idx in 1:dim(uniqueCruises)[1]) {
       mutate(Sunrise = as.double(Sunrise)) %>%
       mutate(Sunset = as.double(Sunset)) %>%
       mutate(Season = as.double(Season)) %>%
+      mutate(VertZone = as.character(VertZone)) %>%
       mutate(Cast = as.character(Cast))
     
     matlab <- as.data.frame(matlab)
@@ -92,7 +93,10 @@ for (idx in 1:dim(uniqueCruises)[1]) {
 }
 rm(idx)
 
-toUpdate = discrete[,c("New_ID",useCol)]
+if (1) {
+  #add the New_ID so I can double check the matching in the Excel file
+  toUpdate = discrete[,c("New_ID",useCol)]
+}
 
 # finally, need a  way to get the updated columns into the existing bottle file
 # will open up the new matrix as an Excel file and then just copy into the existing bottle file

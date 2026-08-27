@@ -81,6 +81,8 @@ To do this and still retain the links do the following:
 * Select 'upload new version' from the menu box that will come up.
 
 ## Other notes...side uses of this repository
+#### August 2026
+If you want a visual check of the CTD data, run this script in MATLAB, which makes the figure here.
 
 #### updated June 2026
 * Start gathering up details on the BIOS-SCOPE samples collected by the BATS team. Using their sampling logs to generate an inventory. Use the ```BATS_sampling_all.R``` script that is in the R code folder.

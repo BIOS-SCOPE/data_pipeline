@@ -75,7 +75,7 @@ CTD.decy = TTin{:,icol.dec_yr};
 CTD.yyyymmdd = dvec(:,1).* 1e4 + dvec(:,2) .* 1e2 + dvec(:,3);
 CTD.hhmm = dvec(:,4).*1e2 + dvec(:,5);
 CTD.latN = TTin{:,icol.lat};
-CTD.lonW = TTin{:,icol.lon};
+CTD.lonW = TTin{:,icol.lon}*(-1); %%% BCO-DMO lists BATS as -64...all other BIOS-SCOPE data list this as 64W, change here to be consistent
 CTD.Pressure = TTin{:,icol.pr};
 CTD.Depth  = TTin{:,icol.de};
 CTD.Temp = TTin{:,icol.te};
@@ -212,9 +212,11 @@ for ii = 1:ncast
    Xout.hour(ii) = dvec(:,4) + dvec (:,5) / 60;
    Xout.doy(ii) = datevec2doy(dvec)';
    Xout.lat(ii) = CTD.latN(itop);
-   %Xout.lon(ii) = CTD.lonW(itop) * -1; %% UPDATE August 27, 2026: this is already negative in the data from BCO-DMO
-   Xout.lon(ii) = CTD.lonW(itop);
-%  Sunrise() uses lon, W is positive
+   Xout.lon(ii) = CTD.lonW(itop) * -1; %% UPDATE August 27, 2026: OK, but see note have (-) * (-) to get a positive number
+%  Sunrise() uses lon, W is positive (not sure why it is done this way, but
+%  changed to negative above, and then made negative again below to result
+%  in a positive number for longitude). Leave as this is done in multiple
+%  scripts, but it's odd.
      [rhr,rmin,shr,smin]=sunrise(dvec(2),dvec(3),dvec(1),Xout.lat(ii),-Xout.lon(ii));
    Xout.Sunrise(ii) = floor(rhr * 100 + rmin); %change to add floor here for export 3/24/2026
    Xout.Sunset(ii) = floor(shr * 100 + smin);%change to add floor here for export 3/24/2026

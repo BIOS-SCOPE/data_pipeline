@@ -53,8 +53,9 @@ CTDprocessedDir = fullfile(datadir,'/processedCTDdata');
 % Data date (cruise) limits: December 1988(cruise 10001) - June 2025 (cruise 10428) 
 % one datafile for all the cruises
 % Downloaded from BCO-DMO manually June 2026
-BCODMOdatadir = fullfile(datadir,'BCODMOdataset3918_BATS_v11');
+BCODMOdatadir = fullfile(datadir,'BCODMO_datasets');
 BCODMOdata = fullfile(BCODMOdatadir,'3918_v11_bats_ctd.csv'); 
+BCODMOdata_Hydrostation = fullfile(BCODMOdatadir,'860014_v11_hydro_s_ctd.csv');
 
 % Also need the data release for the BIOS-SCOPE project...much of this
 % overlaps with what has been submitted to BCO-DMO, but the BIOS-SCOPE-only
@@ -84,8 +85,8 @@ warning('off','MATLAB:nearlySingularMatrix') %turn this off
 warning('off','MATLAB:singularMatrix') %turn this off
 warning('off', 'curvefit:fit:invalidStartPoint')
 
-%% start with the data from BATS/Hydrostation S/BLOOM cruises (source:BCO-DMO)
-%% start with the data from BATS/Hydrostation S/BLOOM cruises (source:BCO-DMO)
+%% start with the data from BATS/BLOOM cruises (source:BCO-DMO)
+%% start with the data from BATS/BLOOM cruises (source:BCO-DMO)
 
 %read in the CTD data as a table
 C = readtable(BCODMOdata);
@@ -112,6 +113,17 @@ for ii = 1:length(uniqueCruises)
 end
 clear ii
 clear C %done with BCO-DMO file
+
+
+%% need one Hydrostation S cruise (source:BCO-DMO)
+%% need one Hydrostation S cruise (source:BCO-DMO)
+
+%read in the CTD data as a table
+C = readtable(BCODMOdata_Hydrostation);
+k = find(C.Cruise_num==61319);
+oneCruise = C(k,:);
+CTD = create_BATS_ctd_files(oneCruise,season_dates,do_plots,CTDprocessedDir,showOutput);
+clear C k oneCruise CTD
 
 %% Move on to the BIOS-SCOPE data release: more recent files
 %% Move on to the BIOS-SCOPE data release: more recent files
