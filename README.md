@@ -17,14 +17,14 @@ Details on the scripts are covered in a slightly-outdated PDF file [here](https:
 * Rachel (or Krista) moves the processed CTD data onto the BIOS-SCOPE Google Drive. The data specific to BIOS-SCOPE will be here in the BIOS-SCOPE Google Drive:\
 ```./1.0 DATA/1.0 ORIG CTD FROM BATS/CTDrelease_20260326```
 
-The BCO-DMO website for the BATS cruises, and Hydrostation S cruises, and the BLOOM cruises is [here](https://www.bco-dmo.org/project/2124), from there you want the two decibar averaged CTD profiles collected at the BATS site. We have samples collected from one Hydrostation S cruise (61319), but otherwise only have data from BATS cxruises and BLOOM cruises. The data at BCO-DMO are updated every six months.
+The BCO-DMO website for the BATS cruises and BLOOM cruises is [here](https://www.bco-dmo.org/project/2124), from there you want the two decibar averaged CTD profiles collected at the BATS site. We have samples collected from one Hydrostation S cruise (61319), but otherwise only have data from BATS cruises and BLOOM cruises. The data at BCO-DMO are updated every six months.
 
 ## Step 1: Download CTD data from BCO-DMO and/or BIOS-SCOPE specific location
 First, get the data from the BIOS-SCOPE Google Drive and from BCO-DMO. This is just a matter of downloading files and putting them some where that is not seen by GitHub as the files are too big for storing on GitHub.
 
 ## Step 2: Pre-processing CTD files (in MATLAB)
 The pipeline was updated in 2026 now that data from both BCO-DMO and coming directly to the BIOS-SCOPE project. The new file is [preProcessingCTDfiles.m ](https://github.com/BIOS-SCOPE/data_pipeline/blob/main/MATLAB_code/preProcessingCTDfiles).\
-The data at BCO-DMO includes any BATS cruises, Hydrostation S cruises, and the BLOOM cruises. As these go back to the beginning of BATS sampling, this will be more than we generally need.\
+The data at BCO-DMO includes any BATS cruises or BLOOM cruises, and the one Hydrostation S cruise we need (61319). As these go back to the beginning of BATS sampling, this will be more than we generally need.\
 We are also still getting BIOS-SCOPE only data, which is now BIOS-SCOPE cruises and anytime a BIOS-SCOPE sample is collected (on a BATS, HS, or BLOOM cruise). This overlaps a little with the data from BCO-DMO. At this step, we process all the files, but will likely trim things down later as it will be too large if we keep all possible cruise/cast/niskin information.
 
 The pre-processing script will go through all the cruises and save the output as a file that is ```CRU_#####_ctd.csv```. Other formats (txt and mat files) have been turned off as they are no longer necessary. The processing script organizes the data so we can use it later and calculates the derived values (season, vertical zone, sunrise/sunset, and mixed layer depths). 
