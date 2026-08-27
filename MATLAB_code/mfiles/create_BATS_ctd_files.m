@@ -12,11 +12,12 @@ function Xout = create_BATS_ctd_files(TTin, trans_dates, do_plots, processedDir,
 %    .strat
 %    .fall
 % do_plots is 1/0 as to whether or not you want to see plots as you go
+% showOutput is 1/0 as to whether or not you want the added details about
+% each cruise as it is processed
 % processedDir is where to put the output files: be certain that this is
 % not synced to GitHub
 % OUTPUT:
-%  Writes individual files for each cast in csv format, plus a single csv
-%           file for the entire cruise
+%  Writes individual files for each cruise
 %  Xout  :  a matlab structure with fields storing info for entire
 %           cruise in row vectors and rectangular matrices.
 
@@ -28,6 +29,8 @@ function Xout = create_BATS_ctd_files(TTin, trans_dates, do_plots, processedDir,
 % Ruth's expected format. I also now set MAXZ based on the data as opposed
 % to preset depth of 2500m
 % 25 August 2026, Krista, add showOutput to make this a little quieter 
+% 27 August 2026: Updated to use the output from BCO-DMO which has
+% longitude as -64 (old data files list it as 64W)
 
 %%  Read file into rectangular array, and store each column as a field in structure CTD
 % fid = fopen(infile,'r');
@@ -209,7 +212,8 @@ for ii = 1:ncast
    Xout.hour(ii) = dvec(:,4) + dvec (:,5) / 60;
    Xout.doy(ii) = datevec2doy(dvec)';
    Xout.lat(ii) = CTD.latN(itop);
-   Xout.lon(ii) = CTD.lonW(itop) * -1;
+   %Xout.lon(ii) = CTD.lonW(itop) * -1; %% UPDATE August 27, 2026: this is already negative in the data from BCO-DMO
+   Xout.lon(ii) = CTD.lonW(itop);
 %  Sunrise() uses lon, W is positive
      [rhr,rmin,shr,smin]=sunrise(dvec(2),dvec(3),dvec(1),Xout.lat(ii),-Xout.lon(ii));
    Xout.Sunrise(ii) = floor(rhr * 100 + rmin); %change to add floor here for export 3/24/2026

@@ -56,7 +56,7 @@ uniqueCruises <- discrete %>%
 # iterate through files in the processed CTD data 
 setwd(processedDir)
 
-useCol = c("Sunrise","Sunset","MLD_dens125","MLD_bvfrq","MLD_densT2","DCM","Season")
+useCol = c("Sunrise","Sunset","MLD_dens125","MLD_bvfrq","MLD_densT2","DCM","VertZone","Season")
 
 for (idx in 1:dim(uniqueCruises)[1]) {
     print(uniqueCruises$cruise5[idx]) #use this so I know where I am
@@ -68,7 +68,7 @@ for (idx in 1:dim(uniqueCruises)[1]) {
       group_by(Cruise,Cast) %>%
       slice(1) %>%
       ungroup() %>%
-      select("cruise5","Cast","Sunrise","Sunset","MLD_dens125","MLD_bvfrq","MLD_densT2","DCM","Season") %>%
+      select("cruise5","Cast","Sunrise","Sunset","MLD_dens125","MLD_bvfrq","MLD_densT2","DCM","VertZone","Season") %>%
       mutate(Sunrise = as.double(Sunrise)) %>%
       mutate(Sunset = as.double(Sunset)) %>%
       mutate(Season = as.double(Season)) %>%

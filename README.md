@@ -1,5 +1,5 @@
 # data_pipeline 
-Updated 26 August 2026; Krista Longnecker 
+Updated 27 August 2026; Krista Longnecker 
 
 This data_pipeline is also available at Zenodo at this DOI:
 <img width="191" height="20" alt="image" src="https://github.com/user-attachments/assets/b37fbb40-e86b-4c72-9fe6-6655a58b311b" />
@@ -28,6 +28,8 @@ The data at BCO-DMO includes any BATS cruises, Hydrostation S cruises, and the B
 We are also still getting BIOS-SCOPE only data, which is now BIOS-SCOPE cruises and anytime a BIOS-SCOPE sample is collected (on a BATS, HS, or BLOOM cruise). This overlaps a little with the data from BCO-DMO. At this step, we process all the files, but will likely trim things down later as it will be too large if we keep all possible cruise/cast/niskin information.
 
 The pre-processing script will go through all the cruises and save the output as a file that is ```CRU_#####_ctd.csv```. Other formats (txt and mat files) have been turned off as they are no longer necessary. The processing script organizes the data so we can use it later and calculates the derived values (season, vertical zone, sunrise/sunset, and mixed layer depths). 
+
+:heavy_exclamation_mark::heavy_exclamation_mark: Be careful about longitude. The BCO-DMO data lists BATS as -64 while the data released to BIOS-SCOPE directly lists 64W (as a positive number).
 
 ## Step 3: Shuting's pipeline (in R)
 This file has been updated to allow us to use BATS data from BCO-DMO. The file has also changed so you can run BATS and BIOS-SCOPE data in one run. The updated R file is [Join_BATS_All_with_master_v5.R](https://github.com/BIOS-SCOPE/data_pipeline/blob/main/R_code/Join_BATS_All_with_master_v5.R). 
@@ -79,6 +81,9 @@ To do this and still retain the links do the following:
 * Select 'upload new version' from the menu box that will come up.
 
 ## Other notes...side uses of this repository
+#### details August 2026
+To do one-time updates the calculated variables, use this script in R: ```updateCalculatedVariables.R```. The script will send out a spreadsheet with New_ID and the derived variables (season, vertical zone, sunrise, sunset, and MLD options), the columns have to be pasted into the Excel sheet manually. 
+
 #### updated June 2026
 * Start gathering up details on the BIOS-SCOPE samples collected by the BATS team. Using their sampling logs to generate an inventory. Use the ```BATS_sampling_all.R``` script that is in the R code folder.
 * also use ```MATLAB_code/makeLUtableForSynoptic.m``` to make a table with the derived values calculated in MATLAB, one line per cruise. Need this for makeSynoptic. 

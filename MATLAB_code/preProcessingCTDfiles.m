@@ -13,6 +13,8 @@
 % (4) This m-file will process all the CTD files into different folders,
 % setting it up that way as so much of the downstream work relies on that
 % organization
+% (5) Be careful with longitude: the BCO-DMO data has BATS at -64, while
+% the BIOS-SCOPE datasets we receive directly have +64 W 
 
 % About the seasons - in June 2024 we received updated season information
 % from Ruth, this update takes advantage of the updated season information
@@ -197,81 +199,15 @@ end
 % Start by getting the list of folders  - this will be both BIOS-SCOPE cruises
 % and cruises where BIOS-SCOPE sampling was done
 cd(oldBIOSSCOPEdatadir);
+
 %first tidy up and make sure there are no existing *txt files
-delete('*.txt')
+D = dir('CRU*csv');
 
-%this will get *all* the directories, some of which will be duplicates
-dirAll = dir(oldBIOSSCOPEdatadir);
-toIgnore = strcmp({dirAll.name}, '.') | strcmp({dirAll.name}, '..');
-dirAll = dirAll(~toIgnore); %remove . and .. as MATLAB is not smart enough to skip them
-clear toIgnore
-
-k = find([dirAll.isdir] == 1);
-foldersOnly = dirAll(k,:); 
-clear k
-dirName = {foldersOnly.name}; 
-
-%only work on the new folders, use setdiff to find that subset
-[c ia] = setdiff(str2double(dirName),uniqueCruises); %unique_cruises is double, but dirName is strings)
-dirlist = foldersOnly(ia,:);
-
-clear c ia isFolder foldersOnly dirName
-
-%now iterate through each of the new cruise folders
-for a = 1 : length(dirlist)
-  thisdir = dirlist(a).name;
-  temp = dir(fullfile(thisdir, '*c*_QC.dat'));
-  %argh, MATLAB on Windows is ignoring case, so this is trapping all the
-  %files names *BIOSSCOPE* which we do not want
-  
-  for aa = 1:length(temp)
-      %take the *dat file (all EXCEPT the one marked BIOS-SCOPE) and make
-      %it a text file. Will put that text file (somewhere)
-      one = strcat(temp(aa).folder,filesep,temp(aa).name);
-      if ~contains(temp(aa).name,'BIOSSCOPE') %skip this file
-          fid = fopen(strcat(thisdir,'_ctd.txt'),'a');
-          riFile = fileread(one);
-          fprintf(fid,'%s',riFile);  
-          fclose(fid);
-          clear riFile fid
-      end
-      clear one
-  end
-  clear aa thisdir temp
+%for the old files, just need to *copy* the CRU file to the right place
+for a = 1 : length(D)
+    copyfile(D(a).name, fullfile(CTDprocessedDir,D(a).name))
 end
-clear a dirlist
-
-%  Now, load and label CTD data, still working in the BIOS-SCOPE data directory
-cd(oldBIOSSCOPEdatadir);
-dirlist = dir('*_ctd.txt');
-new_cruises = cat(1,dirlist.name); %KL adding 1/4/2024
-
-nfiles = length(dirlist);
-for ii = 1:nfiles
-   fname = dirlist(ii).name;
-   infile = fullfile(oldBIOSSCOPEdatadir,fname);
-   newdir = fullfile(oldBIOSSCOPEdatadir,fname(1:end-8));
-   mkdir(newdir);
-   cd(newdir);
-
-   %really is easier to have a separate files for BIOS-SCOPE files as there
-   %are some formatting differences
-   CTD = create_BIOSSCOPE_ctd_files_v2(infile,season_dates,do_plots,CTDprocessedDir,showOutput);
-   %movefile('CRU*',CTDprocessedDir);
-
-   if 0 %for now, turn off *mat files, cannot read those into R (which is the next step)
-       cd(CTDprocessedDir)
-       fmt = '%4d%02d%02d_%1d%04d_CTD.mat';
-       outfile = sprintf(fmt,CTD.year(1),CTD.month(1),CTD.day(1),CTD.type(1),CTD.cruise(1));
-       disp(['Writing ',outfile]);
-       save(outfile,'CTD');
-       clear fmt outfile
-   end
-   
-   clear fname infile newdir CTD
-
-end
-
+clear a D
 
 
 
